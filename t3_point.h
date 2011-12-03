@@ -7,13 +7,13 @@
 class t3_point
 {
 	public:
-	long long int x;
-	long long int y;
-	long long int z;
+	double x;
+	double y;
+	double z;
 
 	t3_point();
 
-	t3_point(long long int xin, long long int yin, long long int zin = 0);
+	t3_point(double xin, double yin, double zin = 0);
 };
 
 std::ostream& operator<<(std::ostream& os, const t3_point& rhs);

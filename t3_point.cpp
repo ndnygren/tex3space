@@ -10,7 +10,7 @@ t3_point::t3_point()
 	z = 0;
 }
 
-t3_point::t3_point(long long int xin, long long int yin, long long int zin)
+t3_point::t3_point(double xin, double yin, double zin)
 {
 	x = xin;
 	y = yin;

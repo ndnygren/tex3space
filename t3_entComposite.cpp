@@ -1,4 +1,5 @@
 #include "t3_entComposite.h"
+#include "t3_matrix.h"
 #include <sstream>
 
 using namespace std;
@@ -17,16 +18,21 @@ vector<t3_poly> t3_entComposite::allPoly() const
 	int i, j, k;
 	vector<t3_poly> outlist;
 	vector<t3_poly> templist;
+	t3_matrix yawmat, rollmat;
 	t3_poly tp;
 
 	for (i = 0; i < subEntSize(); i++)
 	{
 		templist = ml->getEntity(subent[i].name)->allPoly();
+		yawmat.makeYaw(subent[i].yaw);
+		rollmat.makeRoll(subent[i].roll);
 		for (j = 0; j < (int)templist.size(); j++)
 		{
 			tp = templist[j];
 			for (k = 0; k < tp.size(); k++)
 			{
+				tp[k] = yawmat*tp[k];
+				tp[k] = rollmat*tp[k];
 				tp[k].x += subent[i].x;
 				tp[k].y += subent[i].y;
 				tp[k].z += subent[i].z;
