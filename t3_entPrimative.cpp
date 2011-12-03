@@ -20,6 +20,11 @@ void t3_entPrimative::addPoly(const t3_poly& poly)
 	list.push_back(poly);
 }
 
+vector<t3_poly> t3_entPrimative::allPoly() const
+{
+	return list;
+}
+
 int t3_entPrimative::subEntSize() const
 {
 	return 0;

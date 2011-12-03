@@ -12,6 +12,7 @@ class t3_entPrimative: public t3_ent
 	virtual int size() const;
 	virtual t3_poly get(int idx) const;
 	virtual void addPoly(const t3_poly& poly);
+	virtual std::vector<t3_poly> allPoly() const;
 	virtual int subEntSize() const;
 	virtual t3_sixtuple& getSubEnt(int idx);
 	virtual std::string str() const;

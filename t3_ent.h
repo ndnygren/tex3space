@@ -14,6 +14,7 @@ class t3_ent
 	virtual int size() const = 0;
 	virtual t3_poly get(int idx) const = 0;
 	virtual void addPoly(const t3_poly& poly) = 0;
+	virtual std::vector<t3_poly> allPoly() const = 0;
 	virtual int subEntSize() const = 0;
 	virtual t3_sixtuple& getSubEnt(int idx) = 0;
 	virtual std::string str() const = 0;

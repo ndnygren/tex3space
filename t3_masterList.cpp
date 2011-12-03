@@ -70,7 +70,7 @@ istream& operator>>(istream& is, t3_masterList& rhs)
 		{
 			is.getline(buffer, 50, ']');
 			name = buffer;
-			newent = new t3_entComposite(name);
+			newent = new t3_entComposite(name, &rhs);
 			rhs.addEntity(newent);
 
 			is.ignore(256,'{');
@@ -88,3 +88,13 @@ istream& operator>>(istream& is, t3_masterList& rhs)
 }
 
 
+
+t3_masterList::~t3_masterList()
+{
+	map<string, t3_ent*>::const_iterator it;
+
+	for (it = entity.begin(); it != entity.end(); it++)
+	{
+		delete (*it).second;
+	}
+}

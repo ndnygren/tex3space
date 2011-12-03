@@ -27,6 +27,11 @@ void t3_poly::addPoint(int x, int y, int z)
 	list.push_back(t3_point(x,y,z));
 }
 
+t3_point& t3_poly::operator[](int i)
+{
+	return list[i];
+}
+
 ostream& operator<<(ostream& os, const t3_poly& rhs)
 {
 	int i;

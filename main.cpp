@@ -1,5 +1,5 @@
 #include <iostream>
-#include <sstream>
+#include <fstream>
 #include "t3_masterList.h"
 
 
@@ -7,13 +7,23 @@ using namespace std;
 
 int main()
 {
-	stringstream ss;
+	int i;
+	ifstream ifile;
 	t3_masterList ml;
+	vector<t3_poly> polys;
 
-	ss.str("\\primative[name]{{(1,2,3),(4,5,6),(6,5,4)},{(3,21,6),(653,34,2),(867,45,334)}}\n\\composite[name2]{(0,0,1,90,0,haha),(1,2,3,0,90,blabla)}");
-	ss >> ml;
+	ifile.open("testfile");
 
-	cout << ml << endl;
+	ifile >> ml;
+
+	ifile.close();
+
+	polys = ml.getEntity("top")->allPoly();
+
+	for (i = 0; i < (int)polys.size(); i++)
+	{
+		cout << polys[i] << endl;
+	}
 
 	return 0;
 }

@@ -17,6 +17,7 @@ class t3_poly
 	void clear();
 	void addPoint(const t3_point& np);
 	void addPoint(int x, int y, int z);
+	t3_point& operator[](int i);
 };
 
 std::ostream& operator<<(std::ostream& os, const t3_poly& rhs);

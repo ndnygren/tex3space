@@ -15,6 +15,8 @@ class t3_masterList
 	void addEntity(t3_ent* input);
 	t3_ent* getEntity(const std::string& name) const;
 	std::string str() const;
+
+	~t3_masterList();
 };
 
 std::ostream& operator<<(std::ostream& os, const t3_masterList& rhs);
