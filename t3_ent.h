@@ -15,6 +15,7 @@ class t3_ent
 	virtual int subEntSize() const = 0;
 	virtual std::string getSubEnt(int idx) = 0;
 	virtual std::string str() const = 0;
+	virtual std::string getName() const { return name; }
 	virtual void addSubEnt(int x, int y, int z, const std::string& name) = 0;
 	virtual bool isContainer() { return false; }
 

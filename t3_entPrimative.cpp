@@ -34,18 +34,25 @@ std::string t3_entPrimative::str() const
 	stringstream ss;
 
 	ss << "\\primative[";
-	ss << name << "]{" << endl;
+	ss << name << "]" << endl << "{" << endl;
 	for (i = 0; i < (int)list.size(); i++)
 	{
-		ss << "\t" << list[i] << endl;
+		ss << "\t" << list[i];
+		if (i+1 != (int)list.size()) { ss << ", "; }
+		ss << endl;
 	}
 
-	ss << "}" << endl;
+	ss << "}";
 
 	return ss.str();
 }
 
 void t3_entPrimative::addSubEnt(int x, int y, int z, const string& name) { }
+
+t3_entPrimative::t3_entPrimative(const string& inname)
+{
+	name = inname;
+}
 
 ostream& operator<<(ostream& os, const t3_ent& rhs)
 {
