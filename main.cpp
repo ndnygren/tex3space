@@ -1,16 +1,17 @@
 #include <iostream>
 #include <fstream>
 #include "t3_masterList.h"
+#include "gui/GLwindow.h"
 
 
 using namespace std;
 
-int main()
+int main(int argc, char **argv)
 {
-	int i;
+	QApplication app(argc, argv);
 	ifstream ifile;
 	t3_masterList ml;
-	vector<t3_poly> polys;
+	GLwindow window(&ml);
 
 	ifile.open("testfile");
 
@@ -18,12 +19,9 @@ int main()
 
 	ifile.close();
 
-	polys = ml.getEntity("top")->allPoly();
+	window.show();
 
-	for (i = 0; i < (int)polys.size(); i++)
-	{
-		cout << polys[i] << endl;
-	}
+	app.exec();
 
 	return 0;
 }
