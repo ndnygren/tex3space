@@ -3,6 +3,8 @@
 
 using namespace std;
 
+t3_sixtuple t3_ent::nulltuple("");
+
 int t3_entPrimative::size() const
 {
 	return list.size();
@@ -23,9 +25,9 @@ int t3_entPrimative::subEntSize() const
 	return 0;
 }
 
-string t3_entPrimative::getSubEnt(int idx)
+t3_sixtuple& t3_entPrimative::getSubEnt(int idx)
 {
-	return "";
+	return nulltuple;
 }
 
 std::string t3_entPrimative::str() const
@@ -47,7 +49,7 @@ std::string t3_entPrimative::str() const
 	return ss.str();
 }
 
-void t3_entPrimative::addSubEnt(int x, int y, int z, const string& name) { }
+void t3_entPrimative::addSubEnt(int x, int y, int z, int yaw, int roll, const string& name) { }
 
 t3_entPrimative::t3_entPrimative(const string& inname)
 {

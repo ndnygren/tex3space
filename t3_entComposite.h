@@ -1,8 +1,7 @@
 #ifndef NN_T3ENTCOMPOSITE_H
 #define NN_T3ENTCOMPOSTIE_H
 
-#include "t3_poly.h"
-#include "t3_subent.h"
+#include "t3_ent.h"
 
 class t3_entComposite : public t3_ent
 {
@@ -18,6 +17,8 @@ class t3_entComposite : public t3_ent
 	virtual std::string str() const;
 	virtual void addSubEnt(int x, int y, int z, int yaw, int roll, const std::string& name);
 	virtual bool isContainer() { return true; }
+
+	t3_entComposite(const std::string& inname) { name = inname; }
 
 	virtual ~t3_entComposite() {}
 };

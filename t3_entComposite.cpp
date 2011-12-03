@@ -24,8 +24,21 @@ t3_sixtuple& t3_entComposite::getSubEnt(int idx)
 
 string t3_entComposite::str() const
 {
+	int i;
 	stringstream ss;
-	ss << "\\composite[" << getName() << "]" << endl;
+	ss << "\\composite[" << getName() << "]" << endl <<"{" << endl;
+
+	for (i = 0; i < subEntSize(); i++)
+	{
+		ss << "\t" << subent[i];
+		if (i + 1 != subEntSize())
+		{
+			ss << ","; 
+		}
+		ss << endl;
+	}
+
+	ss << "}";
 
 	return ss.str();
 }
@@ -33,4 +46,32 @@ string t3_entComposite::str() const
 void t3_entComposite::addSubEnt(int x, int y, int z, int yaw, int roll, const string& name)
 {
 	subent.push_back(t3_sixtuple(x, y, z, yaw, roll, name));
+}
+
+
+ostream& operator<<(ostream& os, const t3_sixtuple& rhs)
+{
+	os << "(" << rhs.x << "," << rhs.y << "," << rhs.z << "," << rhs.yaw << "," << rhs.roll << "," << rhs.name << ")";
+	return os;
+}
+
+istream& operator>>(istream& is, t3_sixtuple& rhs)
+{
+	char buffer[50];
+	
+	is.ignore(256, '(');
+	is >> rhs.x;
+	is.ignore(256, ',');
+	is >> rhs.y;
+	is.ignore(256, ',');
+	is >> rhs.z;
+	is.ignore(256, ',');
+	is >> rhs.yaw;
+	is.ignore(256, ',');
+	is >> rhs.roll;
+	is.ignore(256, ',');
+	is.getline(buffer,256, ')');
+	rhs.name = buffer;
+
+	return is;
 }

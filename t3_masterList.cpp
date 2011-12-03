@@ -1,6 +1,7 @@
 
 #include "t3_masterList.h"
 #include "t3_entPrimative.h"
+#include "t3_entComposite.h"
 #include <sstream>
 
 using namespace std;
@@ -42,27 +43,47 @@ istream& operator>>(istream& is, t3_masterList& rhs)
 	string name;
 	t3_ent *newent;
 	t3_poly poly;
-	
-	is.ignore(256, '\\');
-	is.getline(buffer, 50, '[');
-	type = buffer;
-	if (type == "primative")
+	t3_sixtuple six("");
+
+	while (!is.eof())
 	{
-		is.getline(buffer, 50, ']');
-		name = buffer;
-		newent = new t3_entPrimative(name);
-		rhs.addEntity(newent);
-
-		is.ignore(256,'{');
-
-		do
+		is.ignore(256, '\\');
+		is.getline(buffer, 50, '[');
+		type = buffer;
+		if (type == "primative")
 		{
-			is >> poly;
-			newent->addPoly(poly);
-			is >> ws >> ch;
-		} while (ch != '}');
+			is.getline(buffer, 50, ']');
+			name = buffer;
+			newent = new t3_entPrimative(name);
+			rhs.addEntity(newent);
+
+			is.ignore(256,'{');
+
+			do
+			{
+				is >> poly;
+				newent->addPoly(poly);
+				is >> ws >> ch;
+			} while (ch != '}');
+		}
+		else if (type == "composite")
+		{
+			is.getline(buffer, 50, ']');
+			name = buffer;
+			newent = new t3_entComposite(name);
+			rhs.addEntity(newent);
+
+			is.ignore(256,'{');
+
+			do
+			{
+				is >> six;
+				newent->addSubEnt(six.x, six.y, six.z, six.yaw, six.roll, six.name);
+				is >> ws >> ch;
+			} while (ch != '}');
+		}
 	}
-	
+
 	return is;
 }
 
