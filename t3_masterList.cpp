@@ -7,6 +7,12 @@
 
 using namespace std;
 
+
+bool t3_masterList::exists(const std::string& input) const
+{
+		return entity.count(input);
+}
+
 void t3_masterList::addEntity(t3_ent* input)
 {
 	entity[input->getName()] = input;
@@ -90,7 +96,7 @@ istream& operator>>(istream& is, t3_masterList& rhs)
 
 string t3_masterList::texOutput() const
 {
-	double xdir, ydir;
+	double xdir;
 	int i,j;
 	stringstream ss;
 	vector<t3_poly> toppoly = getEntity("top")->allPoly();
@@ -126,6 +132,32 @@ string t3_masterList::texOutput() const
 	return ss.str();
 }
 
+
+vector<string> t3_masterList::allNames() const
+{
+	int i,j;
+	string swap;
+	map<string, t3_ent*>::const_iterator it;
+	vector<string> names;
+	names.reserve(entity.size() + 1);
+
+	for (it = entity.begin(); it != entity.end(); it++)
+	{
+		names.push_back((*it).first);
+	}
+
+	for (i = (int)names.size() - 1; i > 0; i--)
+	{
+		for (j = i; j > 0 && names[j] < names[j-1]; j--)
+		{
+			swap = names[j];
+			names[j] = names[j-1];
+			names[j-1] = swap;
+		}
+	}
+
+	return names;
+}
 
 
 t3_masterList::~t3_masterList()

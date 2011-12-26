@@ -12,14 +12,18 @@ class t3MLEditor : public QWidget
 
 	private:
 	t3_masterList *ml;
+	QLineEdit *status;
 	QGridLayout *cols;
 	QListView *entList;
-	QAbstractItemModel *entModel;
+	QStandardItemModel *entModel;
 	GLwindow *gl;
 
+	public slots:
+	void setViewName(const QModelIndex &);
+
 	public:
+	void buildEntList();
 	t3MLEditor(t3_masterList *mlin, QWidget *parent = NULL);
 };
-
 
 #endif

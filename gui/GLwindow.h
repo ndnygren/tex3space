@@ -20,10 +20,12 @@ protected:
 	void keyPressEvent(QKeyEvent *event);
 	void paintGL();
 	void resizeGL(int width, int height);
+	std::string currentName;
 
 public:
 	static const int screen_w = 640;
 	static const int screen_h = 480;
+	void setCurrentName(const std::string& input);
 	GLwindow(t3_masterList *mlin, QWidget *parent = NULL);
 };
 

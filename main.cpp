@@ -22,6 +22,7 @@ int main(int argc, char **argv)
 	if (!ifile.fail())
 	{
 		ifile >> ml;
+		window.buildEntList();
 		cout << "status: file loaded:" <<  argv[1] << "." << endl;
 		ifile.close();
 	}

@@ -11,6 +11,11 @@ GLfloat GLwindow::lpos[4] = { 1.0, 1.0, 1.0, 0.0 };
 GLfloat GLwindow::amb[4] = { 0.0, 0.0, 0.0, 1.0 };
 GLfloat GLwindow::diff[4] = { 1.0, 1.0, 1.0, 1.0 };
 
+void GLwindow::setCurrentName(const std::string& input)
+{
+	currentName = input;
+}
+
 void GLwindow::paintGL()
 {
 	int i,j;
@@ -19,7 +24,12 @@ void GLwindow::paintGL()
 	float fov = 45.0;
 	float aspect = (float)width() / (float)height();
 	double min_x,max_x,min_y,max_y,min_z,max_z;
-	vector<t3_poly> toppoly = ml->getEntity("top")->allPoly();
+	vector<t3_poly> toppoly;
+
+	if (ml->exists(currentName)) 
+	{
+		toppoly = ml->getEntity(currentName)->allPoly();
+	}
 
 	glEnable(GL_LIGHTING);
 	glEnable(GL_COLOR_MATERIAL);
@@ -122,6 +132,5 @@ GLwindow::GLwindow(t3_masterList *mlin, QWidget *parent) : QGLWidget(parent)
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
-
-	
+	currentName = "top";
 }

@@ -5,6 +5,7 @@
 
 #include "t3_ent.h"
 #include <map>
+#include <vector>
 
 class t3_masterList
 {
@@ -12,10 +13,13 @@ class t3_masterList
 	std::map<std::string, t3_ent*> entity;
 
 	public:
+
+	bool exists(const std::string& input) const;
 	void addEntity(t3_ent* input);
 	t3_ent* getEntity(const std::string& name) const;
 	std::string texOutput() const;
 	std::string str() const;
+	std::vector<std::string> allNames() const;
 
 	~t3_masterList();
 };
