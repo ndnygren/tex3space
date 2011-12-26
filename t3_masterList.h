@@ -14,6 +14,7 @@ class t3_masterList
 	public:
 	void addEntity(t3_ent* input);
 	t3_ent* getEntity(const std::string& name) const;
+	std::string texOutput() const;
 	std::string str() const;
 
 	~t3_masterList();

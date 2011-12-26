@@ -69,11 +69,12 @@ void GLwindow::paintGL()
 
 	for (i = 0; i < (int)toppoly.size(); i++)
 	{
-		glBegin(GL_POLYGON);
+		glBegin(GL_LINES);
 		for (j = 0; j < (int)toppoly[i].size(); j++)
 		{
 			glVertex3f(toppoly[i][j].x, toppoly[i][j].y, toppoly[i][j].z);
 		}
+		glVertex3f(toppoly[i][0].x, toppoly[i][0].y, toppoly[i][0].z);
 
 		glEnd();
 	}

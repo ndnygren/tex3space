@@ -3,6 +3,7 @@
 #include "t3_entPrimative.h"
 #include "t3_entComposite.h"
 #include <sstream>
+#include <vector>
 
 using namespace std;
 
@@ -85,6 +86,44 @@ istream& operator>>(istream& is, t3_masterList& rhs)
 	}
 
 	return is;
+}
+
+string t3_masterList::texOutput() const
+{
+	double xdir, ydir;
+	int i,j;
+	stringstream ss;
+	vector<t3_poly> toppoly = getEntity("top")->allPoly();
+
+	ss << "\\documentclass[10pt]{article}" << endl;
+	ss << "\\usepackage[margin=0.5in]{geometry}" << endl;
+	ss << "\\usepackage{graphicx}" << endl;
+	ss << "\\usepackage{amsmath}" << endl;
+	ss << "\\usepackage{amsthm}" << endl;
+	ss << "\\usepackage{amssymb}" << endl;
+	ss << "\\usepackage{pict2e}" << endl;
+	ss << "\\usepackage{subfig}" << endl;
+	ss << "\\begin{document}" << endl;
+	
+	ss << "\\begin{picture}" << endl;
+
+	for (i = 0; i < (int)toppoly.size(); i++)
+	{
+		for (j = 1; j < (int)toppoly[i].size(); j++)
+		{
+			xdir = toppoly[i][j-1].x;
+			ss << "\t\\put(" << toppoly[i][j-1].x << "," << toppoly[i][j-1].y << "){";
+			ss << "\\line(";
+			ss << ")";
+			ss << "}\n";
+		}
+	}
+
+	ss << "\\end{picture}" << endl;
+
+	ss << "\\end{document}" << endl;
+
+	return ss.str();
 }
 
 
