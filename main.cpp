@@ -2,7 +2,7 @@
 #include <fstream>
 #include "t3_masterList.h"
 #include "gui/GLwindow.h"
-#include "gui/consoleOutput.h"
+#include "gui/t3MLEditor.h"
 
 using namespace std;
 
@@ -11,8 +11,7 @@ int main(int argc, char **argv)
 	QApplication app(argc, argv);
 	ifstream ifile;
 	t3_masterList ml;
-	GLwindow window(&ml);
-	consoleOutput co;
+	t3MLEditor window(&ml);
 
 	if (argc < 2) { return 1; }
 
@@ -32,7 +31,6 @@ int main(int argc, char **argv)
 	}
 
 	window.show();
-	co.show();
 	app.exec();
 
 	return 0;
