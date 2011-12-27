@@ -22,11 +22,23 @@ class t3MLEditor : public QWidget
 	QMenu *fileMenu;
 	QAction *newAct;
 	QAction *openAct;
+	QAction *saveAct;
+	QAction *saveAsAct;
+	QAction *exitAct;
+	QMenu *exportMenu;
+	QAction *toSVGAct;
+	QPushButton *nPrButton;
+
+	protected:
+	QString fileName;
 
 	public slots:
 	void setViewName(const QModelIndex &);
 	void newFile();
 	void openFile();
+	void saveFile();
+	void saveFileAs();
+	void newPrimative();
 
 	public:
 	void buildEntList();
