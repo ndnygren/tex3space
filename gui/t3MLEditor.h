@@ -18,8 +18,15 @@ class t3MLEditor : public QWidget
 	QStandardItemModel *entModel;
 	GLwindow *gl;
 
+	QMenuBar *menuBar;
+	QMenu *fileMenu;
+	QAction *newAct;
+	QAction *openAct;
+
 	public slots:
 	void setViewName(const QModelIndex &);
+	void newFile();
+	void openFile();
 
 	public:
 	void buildEntList();

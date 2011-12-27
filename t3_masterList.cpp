@@ -159,10 +159,21 @@ vector<string> t3_masterList::allNames() const
 	return names;
 }
 
+void t3_masterList::clear()
+{
+	map<string, t3_ent*>::iterator it;
+
+	for (it = entity.begin(); it != entity.end(); it++)
+	{
+		delete (*it).second;
+	}
+
+	entity.clear();
+}
 
 t3_masterList::~t3_masterList()
 {
-	map<string, t3_ent*>::const_iterator it;
+	map<string, t3_ent*>::iterator it;
 
 	for (it = entity.begin(); it != entity.end(); it++)
 	{

@@ -20,6 +20,7 @@ class t3_masterList
 	std::string texOutput() const;
 	std::string str() const;
 	std::vector<std::string> allNames() const;
+	void clear();
 
 	~t3_masterList();
 };

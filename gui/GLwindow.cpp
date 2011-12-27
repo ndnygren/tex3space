@@ -30,6 +30,10 @@ void GLwindow::paintGL()
 	{
 		toppoly = ml->getEntity(currentName)->allPoly();
 	}
+	else
+	{
+		return;
+	}
 
 	glEnable(GL_LIGHTING);
 	glEnable(GL_COLOR_MATERIAL);
