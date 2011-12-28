@@ -13,24 +13,24 @@ int main(int argc, char **argv)
 	t3_masterList ml;
 	t3MLEditor window(&ml);
 
-	if (argc < 2) { return 1; }
-
-	cout << "attemping to load: " <<  argv[1] << "." << endl;
-
-	ifile.open(argv[1]);
-
-	if (!ifile.fail())
+	if (argc > 1)
 	{
-		ifile >> ml;
-		window.buildEntList();
-		cout << "status: file loaded:" <<  argv[1] << "." << endl;
-		ifile.close();
-	}
-	else
-	{
-		cout << "error: could not load test file:" <<  argv[1] << "." << endl;
-	}
+		cout << "attemping to load: " <<  argv[1] << "." << endl;
 
+		ifile.open(argv[1]);
+
+		if (!ifile.fail())
+		{
+			ifile >> ml;
+			window.buildEntList();
+			cout << "status: file loaded:" <<  argv[1] << "." << endl;
+			ifile.close();
+		}
+		else
+		{
+			cout << "error: could not load test file:" <<  argv[1] << "." << endl;
+		}
+	}
 	window.show();
 	app.exec();
 

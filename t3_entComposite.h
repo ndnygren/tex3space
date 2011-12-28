@@ -1,8 +1,8 @@
-#ifndef NN_T3ENTCOMPOSITE_H
-#define NN_T3ENTCOMPOSTIE_H
-
 #include "t3_ent.h"
 #include "t3_masterList.h"
+
+#ifndef NN_T3ENTCOMPOSITE_H
+#define NN_T3ENTCOMPOSTIE_H
 
 class t3_entComposite : public t3_ent
 {

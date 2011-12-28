@@ -1,4 +1,5 @@
 #include <QtGui>
+
 #ifndef NN_PRIMATIVEDIALOG_H
 #define NN_PRIMATIVEDIALOG_H
 

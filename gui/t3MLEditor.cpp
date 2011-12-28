@@ -1,6 +1,8 @@
-#include "t3MLeditor.h"
-#include "../t3_entPrimative.h"
+#include "t3MLEditor.h"
 #include "primativeDialog.h"
+#include "../t3_entPrimative.h"
+#include "compositeDialog.h"
+#include "editComposite.h"
 #include <fstream>
 
 using namespace std;
@@ -28,6 +30,7 @@ void t3MLEditor::setViewName(const QModelIndex& input)
 
 void t3MLEditor::newFile()
 {
+	this->setWindowTitle("tex3space v0._");
 	ml->clear();
 	buildEntList();
 	gl->updateGL();
@@ -57,6 +60,7 @@ void t3MLEditor::openFile()
 		else
 		{
 			status->setText(QString("Status: file loaded."));
+			this->setWindowTitle("tex3space v0._ - " + fileName);
 		}
 
 	}
@@ -158,12 +162,36 @@ void t3MLEditor::newPrimative()
 	buildEntList();
 }
 
+void t3MLEditor::newComposite()
+{
+	t3_entComposite *ent;
+	compositeDialog dia(this);
+
+
+	if (dia.exec())
+	{
+			ent = new t3_entComposite(dia.getName(), ml);
+			ml->addEntity(ent);
+	}
+	buildEntList();
+}
+
+void t3MLEditor::editComp()
+{
+	editComposite dia(this, (t3_entComposite*)(ml->getEntity(entList->currentIndex().data().toString().toStdString())));
+
+	dia.exec();
+}
+
 t3MLEditor::t3MLEditor(t3_masterList *mlin, QWidget *parent) : QWidget(parent) 
 {
+	QHBoxLayout *hbuttonbox = new QHBoxLayout();
 	this->setWindowTitle("tex3space v0._");
 	fileName = "";
 	ml = mlin;
 	nPrButton = new QPushButton("New Primative");
+	nCmButton = new QPushButton("New Composite");
+	edCmpButton = new QPushButton("Edit Composite");
 	cols = new QGridLayout();
 	status = new QLineEdit("started");
 	entList = new QListView();
@@ -212,15 +240,21 @@ t3MLEditor::t3MLEditor(t3_masterList *mlin, QWidget *parent) : QWidget(parent)
 	toSVGAct->setStatusTip(tr("Export diagram to SVG"));
 	exportMenu->addAction(toSVGAct);
 
+	hbuttonbox->addWidget(nPrButton);
+	hbuttonbox->addWidget(nCmButton);
+	hbuttonbox->addWidget(edCmpButton);
+
 	cols->setMenuBar(menuBar);
 	cols->addWidget(entList,0,0);
 	cols->addWidget(gl,0,1,0,1);
-	cols->addWidget(nPrButton,1,0);
-	cols->addWidget(status,2,1);
+	cols->addLayout(hbuttonbox, 1, 0);
+	cols->addWidget(status,2,0,1,0);
 	setLayout(cols);
 
 	connect(entList, SIGNAL(clicked(const QModelIndex &)), this, SLOT(setViewName(const QModelIndex &)));
 	connect(nPrButton, SIGNAL(clicked()), this, SLOT(newPrimative()));
+	connect(nCmButton, SIGNAL(clicked()), this, SLOT(newComposite()));
+	connect(edCmpButton, SIGNAL(clicked()), this, SLOT(editComp()));
 
 	buildEntList();
 }

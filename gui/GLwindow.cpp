@@ -30,10 +30,6 @@ void GLwindow::paintGL()
 	{
 		toppoly = ml->getEntity(currentName)->allPoly();
 	}
-	else
-	{
-		return;
-	}
 
 	glEnable(GL_LIGHTING);
 	glEnable(GL_COLOR_MATERIAL);
@@ -46,9 +42,13 @@ void GLwindow::paintGL()
 	glEnable(GL_LIGHT0);
 	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 
-	min_x = max_x = toppoly[0][0].x;
-	min_y = max_y = toppoly[0][0].y;
-	min_z = max_z = toppoly[0][0].z;
+	if (toppoly.size() > 0)
+	{
+		min_x = max_x = toppoly[0][0].x;
+		min_y = max_y = toppoly[0][0].y;
+		min_z = max_z = toppoly[0][0].z;
+	}
+
 	for (i = 0; i < (int)toppoly.size(); i++)
 	{
 		for (j = 0; j < (int)toppoly[i].size(); j++)

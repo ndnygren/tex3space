@@ -5,7 +5,6 @@
 #ifndef NN_T3MLEDITOR_H
 #define NN_T3MLEDITOR_H
 
-
 class t3MLEditor : public QWidget
 {
 	Q_OBJECT
@@ -27,7 +26,7 @@ class t3MLEditor : public QWidget
 	QAction *exitAct;
 	QMenu *exportMenu;
 	QAction *toSVGAct;
-	QPushButton *nPrButton;
+	QPushButton *nPrButton, *nCmButton, *edCmpButton;
 
 	protected:
 	QString fileName;
@@ -39,6 +38,8 @@ class t3MLEditor : public QWidget
 	void saveFile();
 	void saveFileAs();
 	void newPrimative();
+	void newComposite();
+	void editComp();
 
 	public:
 	void buildEntList();
