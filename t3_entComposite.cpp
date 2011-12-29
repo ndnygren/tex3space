@@ -80,6 +80,10 @@ void t3_entComposite::addSubEnt(int x, int y, int z, int yaw, int roll, const st
 	subent.push_back(t3_sixtuple(x, y, z, yaw, roll, name));
 }
 
+void t3_entComposite::removeSubEnt(int i)
+{
+	subent.erase(subent.begin() + i);
+}
 
 ostream& operator<<(ostream& os, const t3_sixtuple& rhs)
 {

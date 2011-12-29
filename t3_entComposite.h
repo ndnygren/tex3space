@@ -19,6 +19,7 @@ class t3_entComposite : public t3_ent
 	virtual t3_sixtuple& getSubEnt(int idx);
 	virtual std::string str() const;
 	virtual void addSubEnt(int x, int y, int z, int yaw, int roll, const std::string& name);
+	virtual void removeSubEnt(int i);
 	virtual bool isContainer() { return true; }
 
 	t3_entComposite(const std::string& inname, t3_masterList* mlin) 

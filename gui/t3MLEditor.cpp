@@ -178,9 +178,36 @@ void t3MLEditor::newComposite()
 
 void t3MLEditor::editComp()
 {
-	editComposite dia(this, (t3_entComposite*)(ml->getEntity(entList->currentIndex().data().toString().toStdString())));
+	int i;
+	t3_entComposite *ent = (t3_entComposite*)(ml->getEntity(entList->currentIndex().data().toString().toStdString()));
+	if (ent == 0 || !ent->isContainer())
+	{
+		return;
+	}
 
-	dia.exec();
+	editComposite dia(this, ent);
+
+	if (dia.exec())
+	{
+		for (i = 0; i < ent->subEntSize(); i++)
+		{
+			ent->getSubEnt(i).x = dia.getX(i);
+			ent->getSubEnt(i).y = dia.getY(i);
+			ent->getSubEnt(i).z = dia.getZ(i);
+			ent->getSubEnt(i).yaw = dia.getYaw(i);
+			ent->getSubEnt(i).roll = dia.getRoll(i);
+			ent->getSubEnt(i).name = dia.getName(i);
+		}
+	}
+
+	for (i = 0; i < ent->subEntSize(); i++)
+	{
+		if (ent->getSubEnt(i).name == "")
+		{
+			ent->removeSubEnt(i);
+		}
+	}
+
 }
 
 t3MLEditor::t3MLEditor(t3_masterList *mlin, QWidget *parent) : QWidget(parent) 
