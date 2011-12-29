@@ -23,7 +23,14 @@ vector<t3_poly> t3_entComposite::allPoly() const
 
 	for (i = 0; i < subEntSize(); i++)
 	{
-		templist = ml->getEntity(subent[i].name)->allPoly();
+		if (ml->exists(subent[i].name))
+		{
+			templist = ml->getEntity(subent[i].name)->allPoly();
+		}
+		else
+		{
+			templist.clear();
+		}
 		yawmat.makeYaw(subent[i].yaw);
 		rollmat.makeRoll(subent[i].roll);
 		for (j = 0; j < (int)templist.size(); j++)
@@ -75,7 +82,7 @@ string t3_entComposite::str() const
 	return ss.str();
 }
 
-void t3_entComposite::addSubEnt(int x, int y, int z, int yaw, int roll, const string& name)
+void t3_entComposite::addSubEnt(double x, double y, double z, double yaw, double roll, const string& name)
 {
 	subent.push_back(t3_sixtuple(x, y, z, yaw, roll, name));
 }

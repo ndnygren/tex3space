@@ -4,11 +4,11 @@
 class t3_sixtuple
 {
 	public:
-	int x;
-	int y;
-	int z;
-	int yaw;
-	int roll;
+	double x;
+	double y;
+	double z;
+	double yaw;
+	double roll;
 	std::string name;
 
 	t3_sixtuple(std::string inname)
@@ -21,7 +21,7 @@ class t3_sixtuple
 		name = inname;
 	}
 
-	t3_sixtuple(int xin, int yin, int zin, int yawin, int rollin, std::string inname)
+	t3_sixtuple(double xin, double yin, double zin, double yawin, double rollin, std::string inname)
 	{
 		x = xin;
 		y = yin;

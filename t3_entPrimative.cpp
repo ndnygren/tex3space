@@ -54,7 +54,7 @@ std::string t3_entPrimative::str() const
 	return ss.str();
 }
 
-void t3_entPrimative::addSubEnt(int x, int y, int z, int yaw, int roll, const string& name) { }
+void t3_entPrimative::addSubEnt(double x, double y, double z, double yaw, double roll, const string& name) { }
 
 t3_entPrimative::t3_entPrimative(const string& inname)
 {
