@@ -210,6 +210,23 @@ void t3MLEditor::editComp()
 
 }
 
+void t3MLEditor::exportSVG()
+{
+	ofstream ofile;
+	QString svgName = QFileDialog::getSaveFileName(this, tr("Save File As"), "", tr("Files (*.*)"));
+
+	ofile.open(svgName.toStdString());
+	if (ofile.fail())
+	{
+		status->setText(QString("Error: could not export file."));
+	}
+	else
+	{
+		ofile << ml->getEntity(entList->currentIndex().data().toString().toStdString())->topSVG();
+		ofile.close();
+	}
+}
+
 t3MLEditor::t3MLEditor(t3_masterList *mlin, QWidget *parent) : QWidget(parent) 
 {
 	QHBoxLayout *hbuttonbox = new QHBoxLayout();
@@ -266,6 +283,7 @@ t3MLEditor::t3MLEditor(t3_masterList *mlin, QWidget *parent) : QWidget(parent)
 	toSVGAct = new QAction(tr("to &SVG"), this);
 	toSVGAct->setStatusTip(tr("Export diagram to SVG"));
 	exportMenu->addAction(toSVGAct);
+	connect(toSVGAct,SIGNAL(triggered()),this,SLOT(exportSVG()));
 
 	hbuttonbox->addWidget(nPrButton);
 	hbuttonbox->addWidget(nCmButton);

@@ -19,6 +19,10 @@ class t3_ent
 	virtual t3_sixtuple& getSubEnt(int idx) = 0;
 	virtual std::string str() const = 0;
 	virtual std::string getName() const { return name; }
+	
+	std::string topSVG() const;
+	
+
 	virtual void addSubEnt(double x, double y, double z, double yaw, double roll, const std::string& name) = 0;
 	virtual bool isContainer() { return false; }
 

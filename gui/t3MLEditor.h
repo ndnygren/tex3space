@@ -40,6 +40,7 @@ class t3MLEditor : public QWidget
 	void newPrimative();
 	void newComposite();
 	void editComp();
+	void exportSVG();
 
 	public:
 	void buildEntList();
