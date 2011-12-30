@@ -213,7 +213,7 @@ void t3MLEditor::editComp()
 void t3MLEditor::exportSVG()
 {
 	ofstream ofile;
-	QString svgName = QFileDialog::getSaveFileName(this, tr("Save File As"), "", tr("Files (*.*)"));
+	QString svgName = QFileDialog::getSaveFileName(this, tr("Export File As"), "", tr("Files (*.*)"));
 
 	ofile.open(svgName.toStdString());
 	if (ofile.fail())
@@ -222,7 +222,7 @@ void t3MLEditor::exportSVG()
 	}
 	else
 	{
-		ofile << ml->getEntity(entList->currentIndex().data().toString().toStdString())->topSVG();
+		ofile << ml->getEntity(entList->currentIndex().data().toString().toStdString())->sideSVG();
 		ofile.close();
 	}
 }
