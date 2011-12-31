@@ -16,6 +16,12 @@ void GLwindow::setCurrentName(const std::string& input)
 	currentName = input;
 }
 
+void GLwindow::setYaw(int in) 
+{ 
+	yaw = in; 
+	updateGL();
+}
+
 void GLwindow::paintGL()
 {
 	int i,j;
@@ -76,10 +82,12 @@ void GLwindow::paintGL()
 
 	glColor4f(1.0, 1.0, 1.0, 1.0);
 
-	glTranslatef((min_x+max_x)/-2.0, (min_y+max_y)/-2.0, -100);
-/*	glRotatef(m_rotation.x, 1, 0, 0);
-	glRotatef(m_rotation.y, 0, 1, 0);
-	glRotatef(m_rotation.z, 0, 0, 1);*/
+	glTranslatef((min_x+max_x)/-2.0, (min_y+max_y)/-2.0,
+		-1.2*max(max_x-min_x, max_y-min_y));
+
+//	glRotatef(m_rotation.x, 1, 0, 0);
+	glRotatef(yaw, 0, 1, 0);
+//	glRotatef(m_rotation.z, 0, 0, 1);
 
 	for (i = 0; i < (int)toppoly.size(); i++)
 	{
@@ -137,4 +145,5 @@ GLwindow::GLwindow(t3_masterList *mlin, QWidget *parent) : QGLWidget(parent)
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 	currentName = "top";
+	yaw = 0;
 }

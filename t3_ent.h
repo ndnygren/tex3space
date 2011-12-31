@@ -23,6 +23,25 @@ class t3_ent
 		}
 	};
 
+	class linepair
+	{
+		public:
+		double x1,y1,x2,y2;
+
+		linepair()
+		{
+			x1 = y1 = x2 = y2 = 0;
+		}
+
+		linepair(double x1in, double y1in, double x2in, double y2in)
+		{
+			x1 = x1in;
+			y1 = y1in;
+			x2 = x2in;
+			y2 = y2in;
+		}
+	};
+
 	static minmax6tuple findMaxMin(const std::vector<t3_poly>& polys);
 	virtual int size() const = 0;
 	virtual t3_poly get(int idx) const = 0;
@@ -43,6 +62,10 @@ class t3_ent
 	virtual ~t3_ent() {}
 };
 
+t3_ent::linepair operator+(const t3_ent::linepair& lhs, const t3_ent::linepair& rhs);
+bool operator<(const t3_ent::linepair& lhs, const t3_ent::linepair& rhs);
+bool operator==(const t3_ent::linepair& lhs, const t3_ent::linepair& rhs);
+std::ostream& operator<<(std::ostream& os, const t3_ent::linepair& rhs);
 std::ostream& operator<<(std::ostream& os, const t3_ent& rhs);
 
 #endif

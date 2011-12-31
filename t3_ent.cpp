@@ -1,11 +1,13 @@
 #include "t3_ent.h"
 #include <sstream>
+#include <algorithm>
 
 using namespace std;
 
-int scaleForSVG(double input)
+double scaleForSVG(double input)
 {
-	return (int)(20*input);
+	double scale = 20;
+	return (scale*input);
 }
 
 t3_ent::minmax6tuple t3_ent::findMaxMin(const std::vector<t3_poly>& polys)
@@ -39,13 +41,20 @@ t3_ent::minmax6tuple t3_ent::findMaxMin(const std::vector<t3_poly>& polys)
 string t3_ent::topSVG() const
 {
 	vector<t3_poly> polys = allPoly();
+	vector<linepair> lines;
+	vector<linepair>::iterator it;
+	linepair offs;
+
+	offs.x1 = 20;
+	offs.y1 = 20;
+	offs.x2 = 20;
+	offs.y2 = 20;
+
 	int i, j;
 	
 	minmax6tuple mm = findMaxMin(polys);
 
 	stringstream ss;
-
-	ss << "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">" << endl;
 	
 	for (i = 0; i < (int)polys.size(); i++)
 	{
@@ -53,13 +62,20 @@ string t3_ent::topSVG() const
 		{
 			if (polys[i][j-1].x != polys[i][j].x || polys[i][j-1].z != polys[i][j].z)
 			{
-				ss << "\t<line x1=\"" << scaleForSVG(polys[i][j-1].x - mm.min_x) << "\" y1=\"" << scaleForSVG(mm.max_z - polys[i][j-1].z);
-				ss << "\" x2=\"" << scaleForSVG(polys[i][j].x - mm.min_x) << "\" y2=\"" << scaleForSVG(mm.max_z - polys[i][j].z) << "\" ";
-				ss << "style=\"stroke:rgb(0,0,0);stroke-width:1\"/>" << endl;
+				lines.push_back(linepair(scaleForSVG(polys[i][j-1].x - mm.min_x), scaleForSVG(mm.max_z - polys[i][j-1].z), scaleForSVG(polys[i][j].x - mm.min_x), scaleForSVG(mm.max_z - polys[i][j].z)));
 			}
 		}
 	}
 
+	sort(lines.begin(), lines.end());
+	it = unique (lines.begin(), lines.end()); 
+	lines.resize( it - lines.begin() ); 
+
+	ss << "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">" << endl;
+	for (i = 0; i < (int)lines.size(); i++)
+	{
+		ss << "\t" << lines[i] + offs << endl;
+	}
 	ss << "</svg>" << endl;
 
 	return ss.str();
@@ -121,4 +137,54 @@ string t3_ent::sideSVG() const
 	ss << "</svg>" << endl;
 
 	return ss.str();
+}
+
+t3_ent::linepair operator+(const t3_ent::linepair& lhs, const t3_ent::linepair& rhs)
+{
+	t3_ent::linepair p = lhs;
+
+	p.x1 += rhs.x1;
+	p.y1 += rhs.y1;
+	p.x2 += rhs.x2;
+	p.y2 += rhs.y2;
+
+	return p;
+}
+
+bool operator<(const t3_ent::linepair& lhs, const t3_ent::linepair& rhs)
+{
+	if (lhs.x1 < rhs.x1)
+	{
+		return true;
+	}
+	else if (lhs.x1 == rhs.x1 && lhs.y1 < rhs.y1)	
+	{
+		return true;
+	}
+	else if (lhs.x1 == rhs.x1 && lhs.y1 == rhs.y1 && lhs.x2 < rhs.x2)
+	{
+		return true;
+	}
+	else if (lhs.x1 == rhs.x1 && lhs.y1 == rhs.y1 && lhs.x2 == rhs.x2 && lhs.y2 < rhs.y2)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool operator==(const t3_ent::linepair& lhs, const t3_ent::linepair& rhs)
+{
+	return (lhs.x1 == rhs.x1 && lhs.y1 == rhs.y1 && lhs.x2 == rhs.x2 && lhs.y2 == rhs.y2);
+}
+
+std::ostream& operator<<(std::ostream& os, const t3_ent::linepair& rhs)
+{
+	os << "<line x1=\"" << rhs.x1 << "\" y1=\"" << rhs.y1;
+	os << "\" x2=\"" << rhs.x2 << "\" y2=\"" << rhs.y2 << "\" ";
+	os << "style=\"stroke:rgb(0,0,0);stroke-width:1\"/>";
+
+	return os;
 }

@@ -213,17 +213,32 @@ void t3MLEditor::editComp()
 void t3MLEditor::exportSVG()
 {
 	ofstream ofile;
-	QString svgName = QFileDialog::getSaveFileName(this, tr("Export File As"), "", tr("Files (*.*)"));
-
-	ofile.open(svgName.toStdString());
-	if (ofile.fail())
+	exportDialog dia(this);
+	if (dia.exec())
 	{
-		status->setText(QString("Error: could not export file."));
-	}
-	else
-	{
-		ofile << ml->getEntity(entList->currentIndex().data().toString().toStdString())->sideSVG();
-		ofile.close();
+		QString svgName = QFileDialog::getSaveFileName(this, tr("Export File As"), "", tr("Files (*.*)"));
+	
+		ofile.open(svgName.toStdString());
+		if (ofile.fail())
+		{
+			status->setText(QString("Error: could not export file."));
+		}
+		else
+		{
+			if (dia.top())
+			{
+				ofile << ml->getEntity(entList->currentIndex().data().toString().toStdString())->topSVG();
+			}
+			else if (dia.front())
+			{
+				ofile << ml->getEntity(entList->currentIndex().data().toString().toStdString())->frontSVG();
+			}
+			else
+			{
+				ofile << ml->getEntity(entList->currentIndex().data().toString().toStdString())->sideSVG();
+			}
+			ofile.close();
+		}
 	}
 }
 
@@ -236,6 +251,11 @@ t3MLEditor::t3MLEditor(t3_masterList *mlin, QWidget *parent) : QWidget(parent)
 	nPrButton = new QPushButton("New Primative");
 	nCmButton = new QPushButton("New Composite");
 	edCmpButton = new QPushButton("Edit Composite");
+	hslide = new QSlider(Qt::Horizontal);
+	hslide->setMinimum(-179);
+	hslide->setMaximum(180);
+	hslide->setValue(0);
+
 	cols = new QGridLayout();
 	status = new QLineEdit("started");
 	entList = new QListView();
@@ -291,12 +311,14 @@ t3MLEditor::t3MLEditor(t3_masterList *mlin, QWidget *parent) : QWidget(parent)
 
 	cols->setMenuBar(menuBar);
 	cols->addWidget(entList,0,0);
-	cols->addWidget(gl,0,1,0,1);
+	cols->addWidget(gl,0,1);
+	cols->addWidget(hslide,1,1);
 	cols->addLayout(hbuttonbox, 1, 0);
 	cols->addWidget(status,2,0,1,0);
 	setLayout(cols);
 
-	connect(entList, SIGNAL(clicked(const QModelIndex &)), this, SLOT(setViewName(const QModelIndex &)));
+	connect(hslide, SIGNAL(valueChanged(int)), gl, SLOT(setYaw(int)));
+	connect(entList, SIGNAL(activated(const QModelIndex &)), this, SLOT(setViewName(const QModelIndex &)));
 	connect(nPrButton, SIGNAL(clicked()), this, SLOT(newPrimative()));
 	connect(nCmButton, SIGNAL(clicked()), this, SLOT(newComposite()));
 	connect(edCmpButton, SIGNAL(clicked()), this, SLOT(editComp()));

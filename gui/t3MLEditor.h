@@ -27,6 +27,7 @@ class t3MLEditor : public QWidget
 	QMenu *exportMenu;
 	QAction *toSVGAct;
 	QPushButton *nPrButton, *nCmButton, *edCmpButton;
+	QSlider *hslide;
 
 	protected:
 	QString fileName;

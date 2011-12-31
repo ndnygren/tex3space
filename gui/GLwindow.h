@@ -21,10 +21,14 @@ protected:
 	void paintGL();
 	void resizeGL(int width, int height);
 	std::string currentName;
+	int yaw;
 
-public:
+public slots:
+	void setYaw(int in);
+
+public:	
 	static const int screen_w = 640;
-	static const int screen_h = 480;
+	static const int screen_h = 360;
 	void setCurrentName(const std::string& input);
 	GLwindow(t3_masterList *mlin, QWidget *parent = NULL);
 };
