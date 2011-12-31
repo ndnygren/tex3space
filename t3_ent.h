@@ -12,6 +12,28 @@ class t3_ent
 
 	public:
 
+	class interval
+	{
+		public:
+		double low,high;
+
+		interval() { low = high = 0; }
+
+		interval(double lowin, double highin)
+		{
+			if (lowin < highin)
+			{
+				low = lowin;
+				high = highin;
+			}
+			else
+			{
+				low = highin;
+				high = lowin;
+			}
+		}
+	};
+
 	class minmax6tuple
 	{
 		public:
@@ -52,6 +74,10 @@ class t3_ent
 	virtual std::string str() const = 0;
 	virtual std::string getName() const { return name; }
 	
+	static std::vector<interval> buildYList(const std::vector<linepair>& lines);
+	static std::vector<interval> buildXList(const std::vector<linepair>& lines);
+	static std::vector<double> endPoints(const std::vector<interval>& lines);
+
 	std::string topSVG() const;	
 	std::string frontSVG() const;	
 	std::string sideSVG() const;	
@@ -61,6 +87,9 @@ class t3_ent
 
 	virtual ~t3_ent() {}
 };
+
+bool operator<(const t3_ent::interval& lhs, const t3_ent::interval& rhs);
+bool operator==(const t3_ent::interval& lhs, const t3_ent::interval& rhs);
 
 t3_ent::linepair operator+(const t3_ent::linepair& lhs, const t3_ent::linepair& rhs);
 bool operator<(const t3_ent::linepair& lhs, const t3_ent::linepair& rhs);

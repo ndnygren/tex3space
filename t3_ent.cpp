@@ -38,11 +38,74 @@ t3_ent::minmax6tuple t3_ent::findMaxMin(const std::vector<t3_poly>& polys)
 	return a;
 }
 
+vector<t3_ent::interval> t3_ent::buildYList(const vector<linepair>& lines)
+{
+	vector<t3_ent::interval> intv;
+	vector<t3_ent::interval>::iterator it;
+	int i;
+
+	for (i = 0; i < (int)lines.size(); i++)
+	{
+		if (lines[i].y1 != lines[i].y2)
+		{
+			intv.push_back(interval(lines[i].y1, lines[i].y2));
+		}
+	}
+
+	sort(intv.begin(), intv.end());
+	it = unique(intv.begin(), intv.end());
+	intv.resize(it - intv.begin());
+
+	return intv;
+}
+
+vector<t3_ent::interval> t3_ent::buildXList(const vector<linepair>& lines)
+{
+	vector<t3_ent::interval> intv;
+	vector<t3_ent::interval>::iterator it;
+	int i;
+
+	for (i = 0; i < (int)lines.size(); i++)
+	{
+		if (lines[i].x1 != lines[i].x2)
+		{
+			intv.push_back(interval(lines[i].x1, lines[i].x2));
+		}
+	}
+
+	sort(intv.begin(), intv.end());
+	it = unique(intv.begin(), intv.end());
+	intv.resize(it - intv.begin());
+
+	return intv;
+}
+
+vector<double> t3_ent::endPoints(const vector<interval>& lines)
+{
+	vector<double> points;
+	vector<double>::iterator it;
+	int i;
+
+	for (i = 0; i < (int)lines.size(); i++)
+	{
+		points.push_back(lines[i].low);
+		points.push_back(lines[i].high);
+	}
+
+	sort(points.begin(), points.end());
+	it = unique(points.begin(), points.end());
+	points.resize(it - points.begin());
+
+	return points;
+}
+
 string t3_ent::topSVG() const
 {
 	vector<t3_poly> polys = allPoly();
 	vector<linepair> lines;
 	vector<linepair>::iterator it;
+	vector<interval> ylist;
+	vector<double> ypoints;
 	linepair offs;
 
 	offs.x1 = 20;
@@ -71,10 +134,21 @@ string t3_ent::topSVG() const
 	it = unique (lines.begin(), lines.end()); 
 	lines.resize( it - lines.begin() ); 
 
+	ylist = buildYList(lines);
+	ypoints = endPoints(ylist);
+
 	ss << "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">" << endl;
+
+	for (i = 0; i < (int)ypoints.size(); i++)
+	{
+		ss << "\t" << "<line x1=\"" << 0 << "\" y1=\"" << ypoints[i];
+		ss << "\" x2=\"" << scaleForSVG(mm.max_x - mm.min_x) << "\" y2=\"" << ypoints[i] << "\" ";
+		ss << "style=\"stroke:rgb(200,200,200);stroke-width:1\"/>" << endl;
+	}
+
 	for (i = 0; i < (int)lines.size(); i++)
 	{
-		ss << "\t" << lines[i] + offs << endl;
+		ss << "\t" << lines[i]  << endl;
 	}
 	ss << "</svg>" << endl;
 
@@ -137,6 +211,16 @@ string t3_ent::sideSVG() const
 	ss << "</svg>" << endl;
 
 	return ss.str();
+}
+
+bool operator<(const t3_ent::interval& lhs, const t3_ent::interval& rhs)
+{
+	return (lhs.high < rhs.high || (lhs.high == rhs.high && lhs.low < rhs.low));
+}
+
+bool operator==(const t3_ent::interval& lhs, const t3_ent::interval& rhs)
+{
+	return (lhs.low == rhs.low && lhs.high == rhs.high);
 }
 
 t3_ent::linepair operator+(const t3_ent::linepair& lhs, const t3_ent::linepair& rhs)
