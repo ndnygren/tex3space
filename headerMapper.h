@@ -30,13 +30,18 @@ class headerMapper
 	void loadIntervals(const std::vector<T>& intervals)
 	{
 		int i, loop;
+		double max = intervals[0].low;
 		headerRow temprow;
 		std::vector<bool> used;
 		used.resize(intervals.size());
 
 		rows.clear();
 
-		for (i = 0; i < (int)intervals.size(); i++) { used[i] = false; }
+		for (i = 0; i < (int)intervals.size(); i++) 
+		{
+			used[i] = false;
+			if (intervals[i].high > max) { max = intervals[i].high; }
+		}
 
 		for (loop = 0; loop < (int)intervals.size(); loop++)
 		{
@@ -44,6 +49,10 @@ class headerMapper
 			if (i >= (int)intervals.size()) { return; }
 
 			rows.push_back(temprow);
+			if (intervals[i].low > 0)
+			{
+				rows.back().push_back(T(0,intervals[i].low));
+			}
 			rows.back().push_back(intervals[i]);
 			used[i] = true;
 
@@ -52,9 +61,17 @@ class headerMapper
 				if (!used[i] && (rows.back().back().high < intervals[i].low
 					|| fabs(rows.back().back().high - intervals[i].low) < 0.01))
 				{
+					if (intervals[i].low > rows.back().back().high && fabs(intervals[i].low - rows.back().back().high) > 0.001)
+					{
+						rows.back().push_back(T(rows.back().back().high,intervals[i].low));
+					}
 					rows.back().push_back(intervals[i]);
 					used[i] = true;
 				}
+			}
+			if (rows.back().back().high < max && fabs(max - rows.back().back().high) > 0.001)
+			{
+				rows.back().push_back(T(rows.back().back().high,max));
 			}
 		}
 	}

@@ -6,6 +6,7 @@
 using namespace std;
 
 double t3_ent::textlinesize = 50.0;
+double t3_ent::tickwidth = 5.0;
 int t3_ent::fontsize = 12;
 
 template <typename T>
@@ -201,15 +202,24 @@ string t3_ent::topSVG(int type) const
 			lvl1 = scaleForSVG(dispxmax - dispxmin) + (0.5 + i)*textlinesize;
 			lvl2 = scaleForSVG(dispxmax - dispxmin) + (0.75 + i)*textlinesize;
 			// one end of the label span
-			low = scaleForSVG(hm[i][j].low);
+			low = scaleForSVG(hm[i][j].low) + 2;
 			lowmid = scaleForSVG((hm[i][j].low+hm[i][j].high)/2) - fontsize/2.0;
 			// the other end of the label span
-			high = scaleForSVG(hm[i][j].high);
+			high = scaleForSVG(hm[i][j].high) - 2;
 			highmid = scaleForSVG((hm[i][j].low+hm[i][j].high)/2) + fontsize/2.0;
+			//rect-linear lines for label span if wide enough
+			if (high - low > 1.5*fontsize)
+			{
+				lvl2 = scaleForSVG(dispxmax - dispxmin) + (0.5 + i)*textlinesize;
+			}
 
 			// the both halves of the label span are drawn
 			ss << "\t" << linepair(lvl1, low, lvl2, lowmid) << endl;
 			ss << "\t" << linepair(lvl1,high,lvl2,highmid) << endl;
+
+			// draw the ticks on line ends
+			ss << "\t" << linepair(lvl1+tickwidth, low, lvl1-tickwidth, low) << endl;
+			ss << "\t" << linepair(lvl1+tickwidth, high, lvl1-tickwidth, high) << endl;
 
 			// draw label text
 			ss << "\t" << "<text x=\"" << lvl2 << "\" y=\"" << highmid << "\"";
@@ -242,14 +252,23 @@ string t3_ent::topSVG(int type) const
 			lvl1 = scaleForSVG(dispymax - dispymin) + (0.5 + i)*textlinesize;
 			lvl2 = scaleForSVG(dispymax - dispymin) + (0.75 + i)*textlinesize;
 			// the width of the label span
-			low = scaleForSVG(hm[i][j].low);
+			low = scaleForSVG(hm[i][j].low) + 2;
 			lowmid = scaleForSVG((hm[i][j].low+hm[i][j].high)/2) - fontsize/2.0;
-			high = scaleForSVG(hm[i][j].high);
+			high = scaleForSVG(hm[i][j].high) - 2;
 			highmid = scaleForSVG((hm[i][j].low+hm[i][j].high)/2) + fontsize/2.0;
+
+			if (high - low > 1.5*fontsize)
+			{
+				lvl2 = scaleForSVG(dispymax - dispymin) + (0.5 + i)*textlinesize;
+			}
 
 			// draw the label span
 			ss << "\t" << linepair(low, lvl1, lowmid, lvl2) << endl;
 			ss << "\t" << linepair(high,lvl1,highmid,lvl2) << endl;
+
+			// draw the ticks on line ends
+			ss << "\t" << linepair(low, lvl1+tickwidth, low, lvl1-tickwidth) << endl;
+			ss << "\t" << linepair(high, lvl1+tickwidth, high, lvl1-tickwidth) << endl;
 
 
 			// draw the label text
