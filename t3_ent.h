@@ -14,6 +14,10 @@ class t3_ent
 
 	public:
 
+	static const int TYPE_TOP = 0;
+	static const int TYPE_FRONT = 1;
+	static const int TYPE_SIDE = 2;
+
 	class interval
 	{
 		public:
@@ -80,7 +84,7 @@ class t3_ent
 	static std::vector<interval> buildXList(const std::vector<linepair>& lines);
 	static std::vector<double> endPoints(const std::vector<interval>& lines);
 
-	std::string topSVG() const;	
+	std::string topSVG(int type = 0) const;	
 	std::string frontSVG() const;	
 	std::string sideSVG() const;	
 

@@ -109,7 +109,7 @@ vector<double> t3_ent::endPoints(const vector<interval>& lines)
 	return points;
 }
 
-string t3_ent::topSVG() const
+string t3_ent::topSVG(int type) const
 {
 	vector<t3_poly> polys = allPoly();
 	vector<linepair> lines;
@@ -123,41 +123,67 @@ string t3_ent::topSVG() const
 	int i, j;
 	minmax6tuple mm = findMaxMin(polys);
 	stringstream ss;
-	
-	dispxmax = mm.max_x;
-	dispxmin = mm.min_x;
-	dispymax = mm.max_z;
-	dispymin = mm.min_z;
 
+
+	// determine size of the 2D projection	
+	if (type == TYPE_TOP)
+	{
+		dispxmax = mm.max_x;
+		dispxmin = mm.min_x;
+		dispymax = mm.max_z;
+		dispymin = mm.min_z;
+	}
+	else if (type == TYPE_FRONT)
+	{
+		dispxmax = mm.max_x;
+		dispxmin = mm.min_x;
+		dispymax = mm.max_y;
+		dispymin = mm.min_y;
+	}
+	else 
+	{
+		dispxmax = mm.max_z;
+		dispxmin = mm.min_z;
+		dispymax = mm.max_y;
+		dispymin = mm.min_y;
+	}
+
+
+	// project onto the 2D plane depending on the type
 	for (i = 0; i < (int)polys.size(); i++)
 	{
 		for (j = 1; j < polys[i].size(); j++)
 		{
-			if (polys[i][j-1].x != polys[i][j].x || polys[i][j-1].z != polys[i][j].z)
+			if (type == TYPE_TOP && (polys[i][j-1].x != polys[i][j].x || polys[i][j-1].z != polys[i][j].z))
 			{
 				lines.push_back(linepair(polys[i][j-1].x - mm.min_x, mm.max_z - polys[i][j-1].z, polys[i][j].x - mm.min_x, mm.max_z - polys[i][j].z));
+			}
+			else if (type == TYPE_FRONT && (polys[i][j-1].x != polys[i][j].x || polys[i][j-1].y != polys[i][j].y))
+			{
+				lines.push_back(linepair(polys[i][j-1].x - mm.min_x, mm.max_y - polys[i][j-1].y, polys[i][j].x - mm.min_x, mm.max_y - polys[i][j].y));
+			}
+			else if (type == TYPE_SIDE && (polys[i][j-1].z != polys[i][j].z || polys[i][j-1].y != polys[i][j].y))
+			{
+				lines.push_back(linepair(polys[i][j-1].z - mm.min_z, mm.max_y - polys[i][j-1].y, polys[i][j].z - mm.min_z, mm.max_y - polys[i][j].y));
 			}
 		}
 	}
 
 	removeDup(lines);
 
+	// find intervals and grid for labels
 	ylist = buildYList(lines);
 	xlist = buildXList(lines);
 	ypoints = endPoints(ylist);
 	xpoints = endPoints(xlist);
+
+	// applying scheduling to vertical intervals
 	hm.loadIntervals(ylist);
 
-	ss << "<!-- ypoints: ";
-	for (i = 0; i < (int)ypoints.size(); i++) {ss << ypoints[i] << " "; }
-	ss << "-->" << endl;
-	ss << "<!-- ylist: ";
-	for (i = 0; i < (int)ylist.size(); i++) {ss << "(" << ylist[i].low << "," << ylist[i].high << ")"; }
-	ss << "-->" << endl;
-
-
+	//begin rendering output;
 	ss << "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">" << endl;
 
+	// drawing horizontal guidlines for vertical labels
 	for (i = 0; i < (int)ypoints.size(); i++)
 	{
 		lvl1 = scaleForSVG(dispxmax - dispxmin) + hm.size()*textlinesize; 
@@ -166,22 +192,26 @@ string t3_ent::topSVG() const
 		ss << "style=\"stroke:rgb(200,200,200);stroke-width:1\"/>" << endl;
 	}
 
-
+	// begin drawing vertical labels
 	for (i=0; i < hm.size(); i++)
 	{
 		for (j = 0; j < hm[i].size(); j++)
 		{
+			// determine the "level"(horizonatl position) of the label
 			lvl1 = scaleForSVG(dispxmax - dispxmin) + (0.5 + i)*textlinesize;
 			lvl2 = scaleForSVG(dispxmax - dispxmin) + (0.75 + i)*textlinesize;
+			// one end of the label span
 			low = scaleForSVG(hm[i][j].low);
 			lowmid = scaleForSVG((hm[i][j].low+hm[i][j].high)/2) - fontsize/2.0;
+			// the other end of the label span
 			high = scaleForSVG(hm[i][j].high);
 			highmid = scaleForSVG((hm[i][j].low+hm[i][j].high)/2) + fontsize/2.0;
 
+			// the both halves of the label span are drawn
 			ss << "\t" << linepair(lvl1, low, lvl2, lowmid) << endl;
 			ss << "\t" << linepair(lvl1,high,lvl2,highmid) << endl;
 
-
+			// draw label text
 			ss << "\t" << "<text x=\"" << lvl2 << "\" y=\"" << highmid << "\"";
 			ss << " font-family=\"Verdana\" font-size=\"";
 			ss << fontsize << "\" fill=\"rgb(0,0,0)\">" << endl;
@@ -190,8 +220,10 @@ string t3_ent::topSVG() const
 		}
 	}
 
+	// apply scheduling to the horizontal labels
 	hm.loadIntervals(xlist);
 
+	// draw the vertical guide lines for the horizontal labels
 	for (i = 0; i < (int)xpoints.size(); i++)
 	{
 		lvl1 = scaleForSVG(dispymax - dispymin) + hm.size()*textlinesize; 
@@ -200,21 +232,27 @@ string t3_ent::topSVG() const
 		ss << "style=\"stroke:rgb(200,200,200);stroke-width:1\"/>" << endl;
 	}
 
+
+	//begin drawing horizontal labels
 	for (i=0; i < hm.size(); i++)
 	{
 		for (j = 0; j < hm[i].size(); j++)
 		{
+			// vertical positions for horizontal axis labels
 			lvl1 = scaleForSVG(dispymax - dispymin) + (0.5 + i)*textlinesize;
 			lvl2 = scaleForSVG(dispymax - dispymin) + (0.75 + i)*textlinesize;
+			// the width of the label span
 			low = scaleForSVG(hm[i][j].low);
 			lowmid = scaleForSVG((hm[i][j].low+hm[i][j].high)/2) - fontsize/2.0;
 			high = scaleForSVG(hm[i][j].high);
 			highmid = scaleForSVG((hm[i][j].low+hm[i][j].high)/2) + fontsize/2.0;
 
+			// draw the label span
 			ss << "\t" << linepair(low, lvl1, lowmid, lvl2) << endl;
 			ss << "\t" << linepair(high,lvl1,highmid,lvl2) << endl;
 
 
+			// draw the label text
 			ss << "\t" << "<text x=\"" << lowmid << "\" y=\"" << lvl2 << "\"";
 			ss << " transform=\"rotate(90 " << lowmid << "," << lvl2 << ")\"";
 			ss << " font-family=\"Verdana\" font-size=\"";
@@ -224,6 +262,7 @@ string t3_ent::topSVG() const
 		}
 	}
 
+	// draw the diagram itself
 	for (i = 0; i < (int)lines.size(); i++)
 	{
 		ss << "\t" << scaleForSVG(lines[i])  << endl;
@@ -233,63 +272,9 @@ string t3_ent::topSVG() const
 	return ss.str();
 }
 
-string t3_ent::frontSVG() const
-{
-	vector<t3_poly> polys = allPoly();
-	int i, j;
-	
-	minmax6tuple mm = findMaxMin(polys);
+string t3_ent::frontSVG() const { return topSVG(TYPE_FRONT); }
 
-	stringstream ss;
-
-	ss << "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">" << endl;
-	
-	for (i = 0; i < (int)polys.size(); i++)
-	{
-		for (j = 1; j < polys[i].size(); j++)
-		{
-			if (polys[i][j-1].x != polys[i][j].x || polys[i][j-1].y != polys[i][j].y)
-			{
-				ss << "\t<line x1=\"" << scaleForSVG(polys[i][j-1].x - mm.min_x) << "\" y1=\"" << scaleForSVG(mm.max_y - polys[i][j-1].y);
-				ss << "\" x2=\"" << scaleForSVG(polys[i][j].x - mm.min_x) << "\" y2=\"" << scaleForSVG(mm.max_y - polys[i][j].y) << "\" ";
-				ss << "style=\"stroke:rgb(0,0,0);stroke-width:1\"/>" << endl;
-			}
-		}
-	}
-
-	ss << "</svg>" << endl;
-
-	return ss.str();
-}
-
-string t3_ent::sideSVG() const
-{
-	vector<t3_poly> polys = allPoly();
-	int i, j;
-	
-	minmax6tuple mm = findMaxMin(polys);
-
-	stringstream ss;
-
-	ss << "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">" << endl;
-	
-	for (i = 0; i < (int)polys.size(); i++)
-	{
-		for (j = 1; j < polys[i].size(); j++)
-		{
-			if (polys[i][j-1].y != polys[i][j].y || polys[i][j-1].z != polys[i][j].z)
-			{
-				ss << "\t<line x1=\"" << scaleForSVG(polys[i][j-1].z - mm.min_z) << "\" y1=\"" << scaleForSVG(mm.max_y - polys[i][j-1].y);
-				ss << "\" x2=\"" << scaleForSVG(polys[i][j].z - mm.min_z) << "\" y2=\"" << scaleForSVG(mm.max_y - polys[i][j].y) << "\" ";
-				ss << "style=\"stroke:rgb(0,0,0);stroke-width:1\"/>" << endl;
-			}
-		}
-	}
-
-	ss << "</svg>" << endl;
-
-	return ss.str();
-}
+string t3_ent::sideSVG() const { return topSVG(TYPE_SIDE); }
 
 bool operator<(const t3_ent::interval& lhs, const t3_ent::interval& rhs)
 {
