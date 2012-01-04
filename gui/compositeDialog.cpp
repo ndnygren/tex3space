@@ -26,3 +26,4 @@ compositeDialog::compositeDialog(QWidget *par): QDialog(par)
 
 	setLayout(cols);
 }
+

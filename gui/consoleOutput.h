@@ -17,3 +17,4 @@ class consoleOutput : public QWidget
 
 
 #endif
+

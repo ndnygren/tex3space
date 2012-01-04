@@ -34,3 +34,4 @@ class editComposite : public QDialog
 };
 
 #endif
+

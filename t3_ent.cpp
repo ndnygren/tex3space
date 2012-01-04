@@ -9,7 +9,7 @@ template <typename T>
 void removeDup(vector<T>& vect)
 {
 	int i;
-	vector<T>::iterator it;
+	typename vector<T>::iterator it;
 	sort(vect.begin(), vect.end());
 	it = unique(vect.begin(), vect.end());
 	vect.resize(it - vect.begin());
@@ -28,6 +28,7 @@ double scaleForSVG(double input)
 	double scale = 20;
 	return (scale*input);
 }
+
 
 t3_ent::minmax6tuple t3_ent::findMaxMin(const std::vector<t3_poly>& polys)
 {
@@ -64,7 +65,7 @@ vector<t3_ent::interval> t3_ent::buildYList(const vector<linepair>& lines)
 
 	for (i = 0; i < (int)lines.size(); i++)
 	{
-		if (abs(lines[i].y1 - lines[i].y2) > 0.01)
+		if (headerMapper<double>::fabs(lines[i].y1 - lines[i].y2) > 0.01)
 		{
 			intv.push_back(interval(lines[i].y1, lines[i].y2));
 		}
@@ -82,7 +83,7 @@ vector<t3_ent::interval> t3_ent::buildXList(const vector<linepair>& lines)
 
 	for (i = 0; i < (int)lines.size(); i++)
 	{
-		if (abs(lines[i].x1 - lines[i].x2) > 0.01)
+		if (headerMapper<double>::fabs(lines[i].x1 - lines[i].x2) > 0.01)
 		{
 			intv.push_back(interval(lines[i].x1, lines[i].x2));
 		}
@@ -239,12 +240,12 @@ string t3_ent::sideSVG() const
 
 bool operator<(const t3_ent::interval& lhs, const t3_ent::interval& rhs)
 {
-	return (lhs.high < rhs.high || (abs(lhs.high - rhs.high) < 0.01 && lhs.low < rhs.low));
+	return (lhs.high < rhs.high || (headerMapper<double>::fabs(lhs.high - rhs.high) < 0.01 && lhs.low < rhs.low));
 }
 
 bool operator==(const t3_ent::interval& lhs, const t3_ent::interval& rhs)
 {
-	return (abs(lhs.low - rhs.low) < 0.25 && abs(lhs.high - rhs.high) < 0.25);
+	return (headerMapper<double>::fabs(lhs.low - rhs.low) < 0.25 && headerMapper<double>::fabs(lhs.high - rhs.high) < 0.25);
 }
 
 t3_ent::linepair operator+(const t3_ent::linepair& lhs, const t3_ent::linepair& rhs)
@@ -296,3 +297,4 @@ std::ostream& operator<<(std::ostream& os, const t3_ent::linepair& rhs)
 
 	return os;
 }
+

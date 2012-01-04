@@ -42,7 +42,7 @@ void t3MLEditor::openFile()
 	fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "", tr("Files (*.*)"));
 
 
-	ifile.open(fileName.toStdString());
+	ifile.open(fileName.toStdString().c_str());
 	if (ifile.fail())
 	{
 		status->setText(QString("Error: could not open file."));
@@ -77,7 +77,7 @@ void t3MLEditor::saveFile()
 		return;
 	}
 
-	ofile.open(fileName.toStdString());
+	ofile.open(fileName.toStdString().c_str());
 	if (ofile.fail())
 	{
 		status->setText(QString("Error: could not save file."));
@@ -218,7 +218,7 @@ void t3MLEditor::exportSVG()
 	{
 		QString svgName = QFileDialog::getSaveFileName(this, tr("Export File As"), "", tr("Files (*.*)"));
 	
-		ofile.open(svgName.toStdString());
+		ofile.open(svgName.toStdString().c_str());
 		if (ofile.fail())
 		{
 			status->setText(QString("Error: could not export file."));
@@ -283,12 +283,10 @@ t3MLEditor::t3MLEditor(t3_masterList *mlin, QWidget *parent) : QWidget(parent)
 	connect(saveAct,SIGNAL(triggered()),this,SLOT(saveFile()));
 
 	saveAsAct = new QAction(tr("Save &As"), this);
-	saveAsAct->setShortcuts(QKeySequence::SaveAs);
 	saveAsAct->setStatusTip(tr("Save file under new location"));
 	connect(saveAsAct,SIGNAL(triggered()),this,SLOT(saveFileAs()));
 
 	exitAct = new QAction(tr("E&xit"), this);
-	exitAct->setShortcuts(QKeySequence::Quit);
 	exitAct->setStatusTip(tr("Close program"));
 
 	fileMenu->addAction(newAct);
@@ -325,3 +323,4 @@ t3MLEditor::t3MLEditor(t3_masterList *mlin, QWidget *parent) : QWidget(parent)
 
 	buildEntList();
 }
+

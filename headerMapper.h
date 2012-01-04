@@ -21,6 +21,12 @@ class headerMapper
 		void resize() { hdata.resize(); }
 	};
 
+	static double fabs (double input)
+	{
+		if (input >= 0) { return input; }
+		else { return -input; }
+	}
+
 	void loadIntervals(const std::vector<T>& intervals)
 	{
 		int i, loop;
@@ -44,7 +50,7 @@ class headerMapper
 			for (; i < (int)intervals.size(); i++) 
 			{
 				if (!used[i] && (rows.back().back().high < intervals[i].low
-					|| abs(rows.back().back().high - intervals[i].low) < 0.01))
+					|| fabs(rows.back().back().high - intervals[i].low) < 0.01))
 				{
 					rows.back().push_back(intervals[i]);
 					used[i] = true;
@@ -62,3 +68,4 @@ class headerMapper
 
 
 #endif
+
