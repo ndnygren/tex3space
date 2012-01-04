@@ -7,6 +7,7 @@
 class t3_ent
 {
 	protected:
+	static double textlinesize;
 	std::string name;
 	static t3_sixtuple nulltuple;
 

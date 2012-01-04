@@ -5,6 +5,8 @@
 
 using namespace std;
 
+double t3_ent::textlinesize = 50.0;
+
 template <typename T>
 void removeDup(vector<T>& vect)
 {
@@ -27,6 +29,12 @@ double scaleForSVG(double input)
 {
 	double scale = 20;
 	return (scale*input);
+}
+
+t3_ent::linepair scaleForSVG(const t3_ent::linepair& input)
+{
+	double scale = 20;
+	return t3_ent::linepair(scale*input.x1, scale*input.y1, scale*input.x2, scale*input.y2);
 }
 
 t3_ent::minmax6tuple t3_ent::findMaxMin(const std::vector<t3_poly>& polys)
@@ -132,7 +140,7 @@ string t3_ent::topSVG() const
 		{
 			if (polys[i][j-1].x != polys[i][j].x || polys[i][j-1].z != polys[i][j].z)
 			{
-				lines.push_back(linepair(scaleForSVG(polys[i][j-1].x - mm.min_x), scaleForSVG(mm.max_z - polys[i][j-1].z), scaleForSVG(polys[i][j].x - mm.min_x), scaleForSVG(mm.max_z - polys[i][j].z)));
+				lines.push_back(linepair(polys[i][j-1].x - mm.min_x, mm.max_z - polys[i][j-1].z, polys[i][j].x - mm.min_x, mm.max_z - polys[i][j].z));
 			}
 		}
 	}
@@ -155,8 +163,8 @@ string t3_ent::topSVG() const
 
 	for (i = 0; i < (int)ypoints.size(); i++)
 	{
-		ss << "\t" << "<line x1=\"" << 0 << "\" y1=\"" << ypoints[i];
-		ss << "\" x2=\"" << scaleForSVG(mm.max_x - mm.min_x) + hm.size()*10 << "\" y2=\"" << ypoints[i] << "\" ";
+		ss << "\t" << "<line x1=\"" << 0 << "\" y1=\"" << scaleForSVG(ypoints[i]);
+		ss << "\" x2=\"" << scaleForSVG(mm.max_x - mm.min_x) + hm.size()*textlinesize << "\" y2=\"" << scaleForSVG(ypoints[i]) << "\" ";
 		ss << "style=\"stroke:rgb(200,200,200);stroke-width:1\"/>" << endl;
 	}
 
@@ -164,15 +172,26 @@ string t3_ent::topSVG() const
 	{
 		for (j = 0; j < hm[i].size(); j++)
 		{
-			ss << "\t" << "<line x1=\"" << scaleForSVG(mm.max_x - mm.min_x) + i*10.0 + 5 << "\" y1=\"" << hm[i][j].low;
-			ss << "\" x2=\"" << scaleForSVG(mm.max_x - mm.min_x) + i*10.0 + 5 << "\" y2=\"" << hm[i][j].high << "\" ";
-			ss << "style=\"stroke:rgb(100,0,100);stroke-width:1\"/>" << endl;
+			ss << "\t" << linepair(scaleForSVG(mm.max_x - mm.min_x) + i*textlinesize,
+				scaleForSVG(hm[i][j].low),
+				scaleForSVG(mm.max_x - mm.min_x) + (0.5 + i)*textlinesize,
+				scaleForSVG((hm[i][j].low+hm[i][j].high)/2)) << endl;
+
+			ss << "\t" << linepair(scaleForSVG(mm.max_x - mm.min_x) + i*textlinesize,
+				scaleForSVG(hm[i][j].high),
+				scaleForSVG(mm.max_x - mm.min_x) + (0.5 + i)*textlinesize,
+				scaleForSVG((hm[i][j].low+hm[i][j].high)/2)) << endl;
+
+			ss << "\t" << "<text x=\"" << scaleForSVG(mm.max_x - mm.min_x) + (0.5 + i)*textlinesize << "\" y=\"" << scaleForSVG((hm[i][j].low+hm[i][j].high)/2) << "\"";
+			ss << " font-family=\"Verdana\" font-size=\"15\" fill=\"rgb(0,0,0)\">" << endl;
+			ss << "\t\t" << hm[i][j].high - hm[i][j].low << endl;
+			ss << "\t" << "</text>" << endl;
 		}
 	}
 
 	for (i = 0; i < (int)lines.size(); i++)
 	{
-		ss << "\t" << lines[i]  << endl;
+		ss << "\t" << scaleForSVG(lines[i])  << endl;
 	}
 	ss << "</svg>" << endl;
 
