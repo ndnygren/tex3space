@@ -10,6 +10,7 @@ class t3_ent
 	static double textlinesize;
 	std::string name;
 	static t3_sixtuple nulltuple;
+	static int fontsize;
 
 	public:
 

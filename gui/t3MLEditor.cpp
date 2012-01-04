@@ -216,7 +216,7 @@ void t3MLEditor::exportSVG()
 	exportDialog dia(this);
 	if (dia.exec())
 	{
-		QString svgName = QFileDialog::getSaveFileName(this, tr("Export File As"), "", tr("Files (*.*)"));
+		QString svgName = QFileDialog::getSaveFileName(this, tr("Export File As"), "", tr("SVG Files (*.svg)"));
 	
 		ofile.open(svgName.toStdString().c_str());
 		if (ofile.fail())

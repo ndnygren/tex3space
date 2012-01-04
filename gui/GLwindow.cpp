@@ -30,6 +30,7 @@ void GLwindow::paintGL()
 	float fov = 45.0;
 	float aspect = (float)width() / (float)height();
 	double min_x,max_x,min_y,max_y,min_z,max_z;
+	min_x = max_x = min_y = max_y = min_z = max_z = 0;
 	vector<t3_poly> toppoly;
 
 	if (ml->exists(currentName)) 
