@@ -1,5 +1,5 @@
 #include <QtGui>
-#include "GLWindow.h"
+#include "GLwindow.h"
 #include "../t3_masterList.h"
 
 #ifndef NN_T3MLEDITOR_H
@@ -49,3 +49,4 @@ class t3MLEditor : public QWidget
 };
 
 #endif
+

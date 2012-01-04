@@ -10,3 +10,4 @@ consoleOutput::consoleOutput()
 
 	setLayout(hbox);
 }
+

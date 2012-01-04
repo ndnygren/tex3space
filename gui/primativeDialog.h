@@ -22,3 +22,4 @@ class primativeDialog : public QDialog
 };
 
 #endif
+

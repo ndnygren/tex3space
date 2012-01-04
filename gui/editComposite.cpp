@@ -23,7 +23,7 @@ double editComposite::stdtod(std::string input)
 void editComposite::rebuildTable()
 {
 	int i;
-	QDoubleValidator *dub = new QDoubleValidator();
+	QDoubleValidator *dub = new QDoubleValidator(this);
 	QLineEdit *idx;
 
 	model->setHorizontalHeaderLabels(headers);
@@ -144,3 +144,4 @@ editComposite::editComposite(QWidget* par, t3_entComposite* input) : QDialog(par
 	setMinimumWidth(700);
 	rebuildTable();
 }
+

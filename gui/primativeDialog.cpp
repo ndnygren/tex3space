@@ -23,7 +23,7 @@ std::string primativeDialog::getName() const
 primativeDialog::primativeDialog(QWidget *par) : QDialog(par)
 {
 	QHBoxLayout *hbox = new QHBoxLayout();
-	QValidator *doubleval = new QDoubleValidator();
+	QValidator *doubleval = new QDoubleValidator(this);
 	cols = new QGridLayout();
 	labh = new QLabel(tr("Height:"));
 	labw = new QLabel(tr("Width:"));
@@ -59,3 +59,4 @@ primativeDialog::primativeDialog(QWidget *par) : QDialog(par)
 
 	setLayout(cols);
 }
+
