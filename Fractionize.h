@@ -13,42 +13,44 @@
 *
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <http://www.gnu.org/licenses/>. */
-#include <iostream>
-#include <fstream>
-#include "gui/t3MLEditor.h"
-#include "Fractionize.h"
 
-using namespace std;
+#include <vector>
+#include <string>
 
-int main(int argc, char **argv)
+#ifndef NN_FRACTIONIZE_H
+#define NN_FRACTIONIZE_H
+
+class Fractionize
 {
-	QApplication app(argc, argv);
-	ifstream ifile;
-	t3_masterList ml;
-	t3MLEditor window(&ml);
-	Fractionize fr;
+	
+	public:
 
-	if (argc > 1)
+	class fr_triple
 	{
-		cout << "attemping to load: " <<  argv[1] << "." << endl;
+		public:
+		double fp;
+		int n;
+		int d;
+		
+		fr_triple();
+		fr_triple(double fpin, int nin, int din);
+		
+		bool operator<(const fr_triple& rhs) const;
+		bool operator==(const fr_triple& rhs) const;
+	};
 
-		ifile.open(argv[1]);
+	static double dabs(double input);
+	static int gcd(int lhs, int rhs);
+	std::string convert(double input) const;
+	Fractionize();
 
-		if (!ifile.fail())
-		{
-			ifile >> ml;
-			window.buildEntList();
-			cout << "status: file loaded:" <<  argv[1] << "." << endl;
-			ifile.close();
-		}
-		else
-		{
-			cout << "error: could not load test file:" <<  argv[1] << "." << endl;
-		}
-	}
-	window.show();
-	app.exec();
+	protected:
 
-	return 0;
-}
+	const static int max_denominator = 64;
+	static std::vector<fr_triple> data;
+	void init();
+};
 
+
+
+#endif

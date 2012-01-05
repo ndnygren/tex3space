@@ -15,6 +15,7 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>. */
 #include "t3_ent.h"
 #include "headerMapper.h"
+#include "Fractionize.h"
 #include <sstream>
 #include <algorithm>
 
@@ -136,12 +137,13 @@ string t3_ent::topSVG(int type) const
 	vector<double> ypoints;
 	vector<interval> xlist;
 	vector<double> xpoints;
-	double lvl1 = 0, lvl2 = 0, high = 0, low = 0, highmid = 0, lowmid = 0;
+	double lvl1 = 0, lvl2 = 0, high = 0, low = 0, highmid = 0, lowmid = 0, textoffs;
 	double dispxmax, dispxmin, dispymax, dispymin;
 	headerMapper<interval> hm;
 	int i, j;
 	minmax6tuple mm = findMaxMin(polys);
-	stringstream ss;
+	stringstream ss, textlabel;
+	Fractionize fr;
 
 
 	// determine size of the 2D projection	
@@ -225,10 +227,17 @@ string t3_ent::topSVG(int type) const
 			// the other end of the label span
 			high = scaleForSVG(hm[i][j].high) - 2;
 			highmid = scaleForSVG((hm[i][j].low+hm[i][j].high)/2) + fontsize/2.0;
+
+			textoffs = 0;
+			textlabel.str("");
+			textlabel << fr.convert(hm[i][j].high - hm[i][j].low);
+			textlabel << "\'\'";  
+
 			//rect-linear lines for label span if wide enough
 			if (high - low > 1.5*fontsize)
 			{
 				lvl2 = scaleForSVG(dispxmax - dispxmin) + (0.5 + i)*textlinesize;
+				textoffs = -1.0*fontsize*textlabel.str().length()/6.0;
 			}
 
 			// the both halves of the label span are drawn
@@ -238,12 +247,13 @@ string t3_ent::topSVG(int type) const
 			// draw the ticks on line ends
 			ss << "\t" << linepair(lvl1+tickwidth, low, lvl1-tickwidth, low) << endl;
 			ss << "\t" << linepair(lvl1+tickwidth, high, lvl1-tickwidth, high) << endl;
+			
 
 			// draw label text
-			ss << "\t" << "<text x=\"" << lvl2 << "\" y=\"" << highmid << "\"";
+			ss << "\t" << "<text x=\"" << lvl2 + textoffs << "\" y=\"" << highmid -1 << "\"";
 			ss << " font-family=\"Verdana\" font-size=\"";
 			ss << fontsize << "\" fill=\"rgb(0,0,0)\">" << endl;
-			ss << "\t\t" << hm[i][j].high - hm[i][j].low << endl;
+			ss << "\t\t" << textlabel.str() << endl;
 			ss << "\t" << "</text>" << endl;
 		}
 	}
@@ -275,9 +285,15 @@ string t3_ent::topSVG(int type) const
 			high = scaleForSVG(hm[i][j].high) - 2;
 			highmid = scaleForSVG((hm[i][j].low+hm[i][j].high)/2) + fontsize/2.0;
 
+			textoffs = 0;
+			textlabel.str("");
+			textlabel << fr.convert(hm[i][j].high - hm[i][j].low);
+			textlabel << "\'\'"; 
+ 
 			if (high - low > 1.5*fontsize)
 			{
 				lvl2 = scaleForSVG(dispymax - dispymin) + (0.5 + i)*textlinesize;
+				textoffs = -1.0*fontsize*textlabel.str().length()/6.0;
 			}
 
 			// draw the label span
@@ -290,11 +306,11 @@ string t3_ent::topSVG(int type) const
 
 
 			// draw the label text
-			ss << "\t" << "<text x=\"" << lowmid << "\" y=\"" << lvl2 << "\"";
-			ss << " transform=\"rotate(90 " << lowmid << "," << lvl2 << ")\"";
+			ss << "\t" << "<text x=\"" << lowmid + 1 << "\" y=\"" << lvl2 + textoffs << "\"";
+			ss << " transform=\"rotate(90 " << lowmid + 1 << "," << lvl2 + textoffs << ")\"";
 			ss << " font-family=\"Verdana\" font-size=\"";
 			ss << fontsize << "\" fill=\"rgb(0,0,0)\">" << endl;
-			ss << "\t\t" << hm[i][j].high - hm[i][j].low << endl;
+			ss << "\t\t" << textlabel.str() << endl;
 			ss << "\t" << "</text>" << endl;
 		}
 	}
