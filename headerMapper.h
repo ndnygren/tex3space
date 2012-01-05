@@ -57,6 +57,17 @@ class headerMapper
 	}
 
 	/**
+	 * @brief qouble floating point equivalence test
+	 * @param lhs double to be tested
+	 * @param rhs double to be tested
+	 * @returns true if and only if lhs and rhs differ only by a small threshold.
+	 */
+	static bool equiv(double lhs, double rhs)
+	{
+		return fabs(lhs-rhs) < DFPET;
+	}
+
+	/**
 	 * @brief Loads a list of intervals and computes a valid solution from them.
 	 * @param intervals The list of intervals to process
 	 */
@@ -94,7 +105,7 @@ class headerMapper
 				if (!used[i] && (rows.back().back().high < intervals[i].low
 					|| fabs(rows.back().back().high - intervals[i].low) < 0.01))
 				{
-					if (intervals[i].low > rows.back().back().high && fabs(intervals[i].low - rows.back().back().high) > 0.001)
+					if (intervals[i].low > rows.back().back().high && !equiv(intervals[i].low, rows.back().back().high))
 					{
 						rows.back().push_back(T(rows.back().back().high,intervals[i].low));
 					}
@@ -102,7 +113,7 @@ class headerMapper
 					used[i] = true;
 				}
 			}
-			if (rows.back().back().high < max && fabs(max - rows.back().back().high) > 0.001)
+			if (rows.back().back().high < max && !equiv(max, rows.back().back().high))
 			{
 				rows.back().push_back(T(rows.back().back().high,max));
 			}
@@ -127,6 +138,7 @@ class headerMapper
 	 * @brief The list of row vectors. Each row will contain a non-overlaping subset of the input intervals. Every interval will be represented in exactly one row.
 	 */
 	std::vector<headerRow> rows;
+	static double DFPET;
 };
 
 

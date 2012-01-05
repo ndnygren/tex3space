@@ -20,6 +20,9 @@
 
 using namespace std;
 
+template <typename T>
+double headerMapper<T>::DFPET = 0.0001;
+
 double t3_ent::textlinesize = 50.0;
 double t3_ent::tickwidth = 5.0;
 int t3_ent::fontsize = 12;
@@ -80,7 +83,7 @@ vector<t3_ent::interval> t3_ent::buildYList(const vector<linepair>& lines)
 
 	for (i = 0; i < (int)lines.size(); i++)
 	{
-		if (headerMapper<double>::fabs(lines[i].y1 - lines[i].y2) > 0.01)
+		if (!headerMapper<interval>::equiv(lines[i].y1, lines[i].y2))
 		{
 			intv.push_back(interval(lines[i].y1, lines[i].y2));
 		}
@@ -98,7 +101,7 @@ vector<t3_ent::interval> t3_ent::buildXList(const vector<linepair>& lines)
 
 	for (i = 0; i < (int)lines.size(); i++)
 	{
-		if (headerMapper<double>::fabs(lines[i].x1 - lines[i].x2) > 0.01)
+		if (!headerMapper<interval>::equiv(lines[i].x1, lines[i].x2))
 		{
 			intv.push_back(interval(lines[i].x1, lines[i].x2));
 		}
@@ -312,12 +315,12 @@ string t3_ent::sideSVG() const { return topSVG(TYPE_SIDE); }
 
 bool operator<(const t3_ent::interval& lhs, const t3_ent::interval& rhs)
 {
-	return (lhs.high < rhs.high || (headerMapper<double>::fabs(lhs.high - rhs.high) < 0.01 && lhs.low < rhs.low));
+	return (lhs.high < rhs.high || (headerMapper<t3_ent::interval>::equiv(lhs.high, rhs.high) && lhs.low < rhs.low));
 }
 
 bool operator==(const t3_ent::interval& lhs, const t3_ent::interval& rhs)
 {
-	return (headerMapper<double>::fabs(lhs.low - rhs.low) < 0.25 && headerMapper<double>::fabs(lhs.high - rhs.high) < 0.25);
+	return (headerMapper<t3_ent::interval>::equiv(lhs.low, rhs.low)  && headerMapper<t3_ent::interval>::equiv(lhs.high, rhs.high));
 }
 
 t3_ent::linepair operator+(const t3_ent::linepair& lhs, const t3_ent::linepair& rhs)
