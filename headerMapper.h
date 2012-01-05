@@ -19,13 +19,22 @@
 #ifndef NN_HEADERMAPPER_H
 #define NN_HEADERMAPPER_H
 
+/**
+ * @brief A class for calculating positions of various, possibly overlapping, labels
+ */
 template <typename T>
 class headerMapper
 {
 	public:
+	/**
+	 * @brief A list of non overlapping intervals representing valid label positions
+	 */
 	class headerRow
 	{
 		private:
+		/**
+		 * @brief the list of intervals
+		 */
 		std::vector<T> hdata;
 
 		public:
@@ -36,12 +45,21 @@ class headerMapper
 		void resize() { hdata.resize(); }
 	};
 
+	/**
+	 * @brief usual floating point absolute value operator
+	 * @param input a number
+	 * @returns the absolute value of the supplied number
+	 */
 	static double fabs (double input)
 	{
 		if (input >= 0) { return input; }
 		else { return -input; }
 	}
 
+	/**
+	 * @brief Loads a list of intervals and computes a valid solution from them.
+	 * @param intervals The list of intervals to process
+	 */
 	void loadIntervals(const std::vector<T>& intervals)
 	{
 		int i, loop;
@@ -91,10 +109,23 @@ class headerMapper
 		}
 	}
 
+	/**
+	 * @brief Access to the underlying rows of non-overlapping intervals
+	 * @param i the index of the row
+	 * @returns the address of the row
+	 */
 	headerRow& operator[](int i) { return rows[i]; }
+
+	/**
+	 * @brief the number of rows
+	 * @returns the number of rows
+	 */
 	int size() const { return rows.size(); }
 
 	private:
+	/**
+	 * @brief The list of row vectors. Each row will contain a non-overlaping subset of the input intervals. Every interval will be represented in exactly one row.
+	 */
 	std::vector<headerRow> rows;
 };
 

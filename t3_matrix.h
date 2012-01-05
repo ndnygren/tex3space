@@ -19,12 +19,27 @@
 
 #include "t3_point.h"
 
+/**
+ * @brief a 3x3 matrix class used for calculating rotations. Multiplication operators are defined in the expected way to rotate point vectors.
+ */
 class t3_matrix
 {
+	/**
+	 * @brief the matrix data
+	 */
 	double data[3][3];
 
 	public:
+	/**
+	 * @brief Populates the matrix with the neccesary values to rotate the matrix around the y axis by "angle" degrees
+	 * @param angle The angle in the degrees to rotate
+	 */
 	void makeYaw(double angle);
+
+	/**
+	 * @brief Populates the matrix with the neccesary values to rotate the matrix around the z axis by "angle" degrees
+	 * @param angle The angle in the degrees to rotate
+	 */
 	void makeRoll(double angle);
 	
 	t3_point operator*(const t3_point& rhs) const;

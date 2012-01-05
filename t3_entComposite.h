@@ -19,10 +19,22 @@
 #ifndef NN_T3ENTCOMPOSITE_H
 #define NN_T3ENTCOMPOSTIE_H
 
+
+/**
+ * @brief The child entity of t3_ent which represents a list of othe entities
+ * @details This class contains a list of other entities, either primative or composite with parameters for each decsribing rotations and translations.
+ */
 class t3_entComposite : public t3_ent
 {
 	protected:
+	/**
+	 * @brief The list of all sub-entities
+	 */
 	std::vector<t3_sixtuple> subent;
+
+	/**
+	 * @brief The master list of entities which allows this entity to make recursive calls to subentities.
+	 */
 	t3_masterList *ml;
 
 	public:

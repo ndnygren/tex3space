@@ -18,9 +18,17 @@
 
 #include "t3_ent.h"
 
+
+/**
+ *@brief The child class of t3_ent representing primative entities.
+ *@details This class contains a vector of polygons(t3_poly)
+ */
 class t3_entPrimative: public t3_ent
 {
 	protected:
+	/**
+	 * @brief the list of polygons that make up this entity
+	 */
 	std::vector<t3_poly> list;
 
 	public:

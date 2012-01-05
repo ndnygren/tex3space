@@ -21,17 +21,56 @@
 #include "t3_point.h"
 #include <vector>
 
+
+/**
+ * @brief A list of points descibing a polygon
+ */
 class t3_poly
 {
 	protected:
+	/**
+	 * @brief the list of points
+	 */
 	std::vector<t3_point> list;
 
 	public:
+	/**
+	 * @brief the size of the polygon in points
+	 * @returns the number of points
+	 */
 	int size() const;
+
+	/**
+	 * @brief read-only access to a point
+	 * @param idx the index of the desired point
+	 * @returns the point at idx
+	 */
 	t3_point get(int idx) const;
+
+	/**
+	 * @brief removes all points in the polygon
+	 */
 	void clear();
+
+	/**
+	 * @brief adds a point to the polygon
+	 * @param np the new point to add
+	 */
 	void addPoint(const t3_point& np);
+
+	/**
+	 * @brief adds a point to the polygon
+	 * @param x the x coordinate of the point to add
+	 * @param y the y coordinate of the point to add
+	 * @param z the z coordinate of the point to add
+	 */
 	void addPoint(int x, int y, int z);
+
+	/**
+	 * @brief read-write access to a point
+	 * @param i the index to the point to retrieve
+	 * @returns the address of the point
+	 */
 	t3_point& operator[](int i);
 };
 

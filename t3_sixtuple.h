@@ -16,6 +16,10 @@
 #ifndef NN_T3SIXTUPLE_H
 #define NN_T3SIXTUPLE_H
 
+
+/**
+ * @brief A container for composite parameters. These values describe the translations and rotations of a sub-entity.
+ */
 class t3_sixtuple
 {
 	public:

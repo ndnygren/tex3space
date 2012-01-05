@@ -19,6 +19,10 @@
 
 #include <iostream>
 
+
+/**
+ * @brief a triple of doubles, representing a point in R^3
+ */
 class t3_point
 {
 	public:
