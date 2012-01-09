@@ -260,7 +260,7 @@ void t3MLEditor::exportSVG()
 t3MLEditor::t3MLEditor(t3_masterList *mlin, QWidget *parent) : QWidget(parent) 
 {
 	QHBoxLayout *hbuttonbox = new QHBoxLayout();
-	this->setWindowTitle("tex3space v0._");
+	this->setWindowTitle("tex3space v0.1");
 	fileName = "";
 	ml = mlin;
 	nPrButton = new QPushButton("New Primative");

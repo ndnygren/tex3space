@@ -19,6 +19,8 @@
 
 using namespace std;
 
+char *copyright = "tex3space - renders 2D projections of 3D objects for TeX  Copyright (C) 2012 Nick Nygren";
+
 int main(int argc, char **argv)
 {
 	QApplication app(argc, argv);
