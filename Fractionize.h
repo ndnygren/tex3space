@@ -20,16 +20,35 @@
 #ifndef NN_FRACTIONIZE_H
 #define NN_FRACTIONIZE_H
 
+
+/**
+ * @brief class of staic members for converting floating point numbers into 
+ * a fractional form (ex. 1.5 --> 1 1/2)
+ */
 class Fractionize
 {
 	
 	public:
 
+	/**
+	 * @brief A ordered triple containing a integer pair and a floating point
+	 * representation of their ratio.
+	 */
 	class fr_triple
 	{
 		public:
+		/**
+		 * @brief the floating point representation
+		 */
 		double fp;
+		/**
+		 * @brief The integer value of the numerator
+		 */
 		int n;
+
+		/**
+		 * @brief The integer value of the denominator
+		 */
 		int d;
 		
 		fr_triple();
@@ -46,8 +65,19 @@ class Fractionize
 
 	protected:
 
+	/**
+	 * @brief limit of the precision of the fractions.
+	 */
 	const static int max_denominator = 64;
+
+	/**
+	 * @brief cache shared by all instances of Fractionize
+	 */
 	static std::vector<fr_triple> data;
+
+	/**
+	 * @brief populates the cache with all pairs of fractions upto the denominator size limit.
+	 */
 	void init();
 };
 

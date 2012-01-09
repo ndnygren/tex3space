@@ -16,7 +16,6 @@
 #include <iostream>
 #include <fstream>
 #include "gui/t3MLEditor.h"
-#include "Fractionize.h"
 
 using namespace std;
 
@@ -26,7 +25,6 @@ int main(int argc, char **argv)
 	ifstream ifile;
 	t3_masterList ml;
 	t3MLEditor window(&ml);
-	Fractionize fr;
 
 	if (argc > 1)
 	{
