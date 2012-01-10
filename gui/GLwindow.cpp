@@ -101,9 +101,7 @@ void GLwindow::paintGL()
 	glTranslatef((min_x+max_x)/-2.0, (min_y+max_y)/-2.0,
 		-1.2*max(max_x-min_x, max_y-min_y));
 
-//	glRotatef(m_rotation.x, 1, 0, 0);
 	glRotatef(yaw, 0, 1, 0);
-//	glRotatef(m_rotation.z, 0, 0, 1);
 
 	for (i = 0; i < (int)toppoly.size(); i++)
 	{
@@ -118,6 +116,17 @@ void GLwindow::paintGL()
 
 		glEnd();
 	}
+
+	glColor4f(0.0, 1.0, 0.0, 1.0);
+
+	glBegin(GL_LINES);
+		glVertex3f(-0.5, 0, 0);
+		glVertex3f(0.5, 0, 0);
+		glVertex3f(0, -0.5, 0);
+		glVertex3f(0, 0.5, 0);
+		glVertex3f(0, 0, -0.5);
+		glVertex3f(0, 0, 0.5);
+	glEnd();
 
 	glPopMatrix();
 

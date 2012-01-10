@@ -81,6 +81,13 @@ class t3_masterList
 	 */
 	void clear();
 
+	/**
+	 * @brief attempts to remove an entity from the list
+	 * @param input the name of the entity to be deleted
+	 * @returns true if the entity exists, false otherwise
+	 */
+	bool deleteEntity(std::string input);
+
 	~t3_masterList();
 };
 

@@ -196,9 +196,19 @@ void t3MLEditor::newComposite()
 void t3MLEditor::editComp()
 {
 	int i;
-	t3_entComposite *ent = (t3_entComposite*)(ml->getEntity(entList->currentIndex().data().toString().toStdString()));
+	t3_entComposite *ent;
+
+	if (entList->currentIndex().row() == -1)
+	{
+		status->setText("Error: no entity selected.");
+		return;
+	}
+
+	ent = (t3_entComposite*)(ml->getEntity(entList->currentIndex().data().toString().toStdString()));
+
 	if (ent == 0 || !ent->isContainer())
 	{
+		status->setText("Error: entity is not composite.");
 		return;
 	}
 
@@ -225,6 +235,23 @@ void t3MLEditor::editComp()
 		}
 	}
 
+}
+
+void t3MLEditor::deleteEnt()
+{
+	if (entList->currentIndex().row() == -1)
+	{
+		status->setText("Error: no entity selected.");
+		return;
+	}
+
+	
+	if (ml->deleteEntity(entList->currentIndex().data().toString().toStdString()))
+		{ status->setText("Entity removed."); }
+	else
+		{ status->setText("Error: could not remove entity"); }
+	
+	buildEntList();
 }
 
 void t3MLEditor::exportSVG()
@@ -265,9 +292,16 @@ t3MLEditor::t3MLEditor(t3_masterList *mlin, QWidget *parent) : QWidget(parent)
 	this->setWindowTitle(titlebar.c_str());
 	fileName = "";
 	ml = mlin;
+
 	nPrButton = new QPushButton("New Primative");
+	nPrButton->setMaximumWidth(120);
 	nCmButton = new QPushButton("New Composite");
+	nCmButton->setMaximumWidth(120);
 	edCmpButton = new QPushButton("Edit Composite");
+	edCmpButton->setMaximumWidth(120);
+	delButton = new QPushButton("Delete");
+	delButton->setMaximumWidth(80);
+
 	hslide = new QSlider(Qt::Horizontal);
 	hslide->setMinimum(-179);
 	hslide->setMaximum(180);
@@ -323,13 +357,15 @@ t3MLEditor::t3MLEditor(t3_masterList *mlin, QWidget *parent) : QWidget(parent)
 	hbuttonbox->addWidget(nPrButton);
 	hbuttonbox->addWidget(nCmButton);
 	hbuttonbox->addWidget(edCmpButton);
+	hbuttonbox->addWidget(delButton);
+	hbuttonbox->setSpacing(0);
 
 	cols->setMenuBar(menuBar);
-	cols->addWidget(entList,0,0);
+	cols->addWidget(entList,0,0,2,1);
 	cols->addWidget(gl,0,1);
 	cols->addWidget(hslide,1,1);
-	cols->addLayout(hbuttonbox, 1, 0);
-	cols->addWidget(status,2,0,1,0);
+	cols->addLayout(hbuttonbox, 2, 0, 1, 2);
+	cols->addWidget(status,3,0, 1,2);
 	setLayout(cols);
 
 	connect(hslide, SIGNAL(valueChanged(int)), gl, SLOT(setYaw(int)));
@@ -337,6 +373,7 @@ t3MLEditor::t3MLEditor(t3_masterList *mlin, QWidget *parent) : QWidget(parent)
 	connect(nPrButton, SIGNAL(clicked()), this, SLOT(newPrimative()));
 	connect(nCmButton, SIGNAL(clicked()), this, SLOT(newComposite()));
 	connect(edCmpButton, SIGNAL(clicked()), this, SLOT(editComp()));
+	connect(delButton, SIGNAL(clicked()), this, SLOT(deleteEnt()));
 
 	buildEntList();
 }

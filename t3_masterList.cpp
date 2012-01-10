@@ -186,6 +186,20 @@ void t3_masterList::clear()
 	entity.clear();
 }
 
+bool t3_masterList::deleteEntity(std::string input)
+{
+	map<string, t3_ent*>::iterator it;
+	if (!exists(input)) { return false; }
+
+	it = entity.find(input);
+
+	delete (*it).second;
+
+	entity.erase(it);	
+
+	return true;
+}
+
 t3_masterList::~t3_masterList()
 {
 	map<string, t3_ent*>::iterator it;
