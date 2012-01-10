@@ -25,6 +25,7 @@ class t3MLEditor : public QWidget
 	Q_OBJECT
 
 	private:
+	static std::string titlebar;
 	t3_masterList *ml;
 	QLineEdit *status;
 	QGridLayout *cols;

@@ -22,6 +22,8 @@
 
 using namespace std;
 
+string t3MLEditor::titlebar = "tex3space v0._ ";
+
 void t3MLEditor::buildEntList()
 {
 	int i;
@@ -45,7 +47,7 @@ void t3MLEditor::setViewName(const QModelIndex& input)
 
 void t3MLEditor::newFile()
 {
-	this->setWindowTitle("tex3space v0._");
+	this->setWindowTitle(titlebar.c_str());
 	ml->clear();
 	buildEntList();
 	gl->updateGL();
@@ -75,7 +77,7 @@ void t3MLEditor::openFile()
 		else
 		{
 			status->setText(QString("Status: file loaded."));
-			this->setWindowTitle("tex3space v0._ - " + fileName);
+			this->setWindowTitle(titlebar.c_str() + fileName);
 		}
 
 	}
@@ -260,7 +262,7 @@ void t3MLEditor::exportSVG()
 t3MLEditor::t3MLEditor(t3_masterList *mlin, QWidget *parent) : QWidget(parent) 
 {
 	QHBoxLayout *hbuttonbox = new QHBoxLayout();
-	this->setWindowTitle("tex3space v0.1");
+	this->setWindowTitle(titlebar.c_str());
 	fileName = "";
 	ml = mlin;
 	nPrButton = new QPushButton("New Primative");
