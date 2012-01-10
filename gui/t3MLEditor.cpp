@@ -18,6 +18,7 @@
 #include "../t3_entPrimative.h"
 #include "compositeDialog.h"
 #include "editComposite.h"
+#include "smartAddEntityDialog.h"
 #include <fstream>
 
 using namespace std;
@@ -254,6 +255,66 @@ void t3MLEditor::deleteEnt()
 	buildEntList();
 }
 
+void t3MLEditor::addToComp()
+{
+	t3_ent::minmax6tuple mm_new, mm_comp;
+	t3_entComposite *ent;
+	string newname, oldname;
+
+	oldname = entList->currentIndex().data().toString().toStdString();
+
+	if (entList->currentIndex().row() == -1)
+	{
+		status->setText("Error: no entity selected.");
+		return;
+	}
+
+	smartAddEntityDialog dia(this, oldname, ml);
+	ent = (t3_entComposite*)(ml->getEntity(oldname));
+	
+	if (ent == 0 || !ent->isContainer())
+	{
+		status->setText("Error: entity is not composite.");
+		return;
+	}
+
+	if (dia.exec())
+	{
+		newname = dia.getName();
+
+		if (!ml->exists(newname)) { return; }
+
+		mm_new = t3_ent::findMaxMin(ml->getEntity(newname)->allPoly());
+		mm_comp = t3_ent::findMaxMin(ml->getEntity(oldname)->allPoly());
+
+		if (dia.isTop())
+		{
+			ent->addSubEnt(0, mm_comp.max_y - mm_new.min_y + dia.getGap(), 0, 0, 0, newname);
+		}
+		else if (dia.isBottom())
+		{
+			ent->addSubEnt(0, mm_comp.min_y - mm_new.max_y - dia.getGap(), 0, 0, 0, newname);
+		}
+		else if (dia.isLeft())
+		{
+			ent->addSubEnt(mm_comp.min_x - mm_new.max_x - dia.getGap(), 0, 0, 0, 0, newname);
+		}
+		else if (dia.isRight())
+		{
+			ent->addSubEnt(mm_comp.max_x - mm_new.min_x + dia.getGap(), 0, 0, 0, 0, newname);
+		}
+		else if (dia.isFront())
+		{
+			ent->addSubEnt(0, 0, mm_comp.max_z - mm_new.min_z + dia.getGap(), 0, 0, newname);
+		}
+		else if (dia.isBack())
+		{
+			ent->addSubEnt(0, 0, mm_comp.min_z - mm_new.max_z - dia.getGap(), 0, 0, newname);
+		}
+
+	}
+}
+
 void t3MLEditor::exportSVG()
 {
 	ofstream ofile;
@@ -301,6 +362,8 @@ t3MLEditor::t3MLEditor(t3_masterList *mlin, QWidget *parent) : QWidget(parent)
 	edCmpButton->setMaximumWidth(120);
 	delButton = new QPushButton("Delete");
 	delButton->setMaximumWidth(80);
+	addCompButton = new QPushButton("Add To...");
+	addCompButton->setMaximumWidth(90);
 
 	hslide = new QSlider(Qt::Horizontal);
 	hslide->setMinimum(-179);
@@ -358,7 +421,7 @@ t3MLEditor::t3MLEditor(t3_masterList *mlin, QWidget *parent) : QWidget(parent)
 	hbuttonbox->addWidget(nCmButton);
 	hbuttonbox->addWidget(edCmpButton);
 	hbuttonbox->addWidget(delButton);
-	hbuttonbox->setSpacing(0);
+	hbuttonbox->addWidget(addCompButton);
 
 	cols->setMenuBar(menuBar);
 	cols->addWidget(entList,0,0,2,1);
@@ -374,6 +437,7 @@ t3MLEditor::t3MLEditor(t3_masterList *mlin, QWidget *parent) : QWidget(parent)
 	connect(nCmButton, SIGNAL(clicked()), this, SLOT(newComposite()));
 	connect(edCmpButton, SIGNAL(clicked()), this, SLOT(editComp()));
 	connect(delButton, SIGNAL(clicked()), this, SLOT(deleteEnt()));
+	connect(addCompButton, SIGNAL(clicked()), this, SLOT(addToComp()));
 
 	buildEntList();
 }
