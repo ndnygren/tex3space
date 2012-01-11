@@ -64,7 +64,7 @@ class smartAddEntityDialog : public QDialog
 	smartAddEntityDialog(QWidget *par, std::string name, t3_masterList *ml) : QDialog(par)
 	{
 		int i;
-		std::string diatitle = "Add To" + name;
+		std::string diatitle = "Add To " + name;
 		std::vector<std::string> names = ml->allNames();
 		QStandardItem *item;
 		QValidator *doubleval = new QDoubleValidator(this);

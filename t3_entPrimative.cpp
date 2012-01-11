@@ -71,6 +71,21 @@ std::string t3_entPrimative::str() const
 
 void t3_entPrimative::addSubEnt(double x, double y, double z, double yaw, double roll, const string& name) { }
 
+void t3_entPrimative::recenter(double dx, double dy, double dz)
+{
+	int i, j;
+
+	for (i = 0; i < (int)list.size(); i++)
+	{
+		for (j = 0; j < list[i].size(); j++)
+		{
+			list[i][j].x -= dx;
+			list[i][j].y -= dy;
+			list[i][j].z -= dz;
+		}
+	}
+}
+
 t3_entPrimative::t3_entPrimative(const string& inname)
 {
 	name = inname;

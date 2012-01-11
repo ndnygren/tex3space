@@ -107,6 +107,18 @@ void t3_entComposite::removeSubEnt(int i)
 	subent.erase(subent.begin() + i);
 }
 
+void t3_entComposite::recenter(double dx, double dy, double dz)
+{
+	int i;
+
+	for (i = 0; i < subEntSize(); i++)
+	{
+		getSubEnt(i).x -= dx;
+		getSubEnt(i).y -= dy;
+		getSubEnt(i).z -= dz;
+	}
+}
+
 ostream& operator<<(ostream& os, const t3_sixtuple& rhs)
 {
 	os << "(" << rhs.x << "," << rhs.y << "," << rhs.z << "," << rhs.yaw << "," << rhs.roll << "," << rhs.name << ")";

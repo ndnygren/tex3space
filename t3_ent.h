@@ -261,6 +261,14 @@ class t3_ent
 	 */
 	virtual bool isContainer() { return false; }
 
+	/**
+	 * @brief moves the zero point within the entities space(or equivalently moves the entire entity relative to zero)
+	 * @param dx the offset along the x axis
+	 * @param dy the offset along the y axis
+	 * @param dz the offset along the z axis
+	 */
+	virtual void recenter(double dx, double dy, double dz) = 0;
+
 	virtual ~t3_ent() {}
 };
 

@@ -19,6 +19,7 @@
 #include "compositeDialog.h"
 #include "editComposite.h"
 #include "smartAddEntityDialog.h"
+#include "recenterEntDialog.h"
 #include <fstream>
 
 using namespace std;
@@ -247,12 +248,42 @@ void t3MLEditor::deleteEnt()
 	}
 
 	
-	if (ml->deleteEntity(entList->currentIndex().data().toString().toStdString()))
+	if (ml->deleteEntity(
+entList->currentIndex().data().toString().toStdString()
+))
 		{ status->setText("Entity removed."); }
 	else
 		{ status->setText("Error: could not remove entity"); }
 	
 	buildEntList();
+}
+
+void t3MLEditor::recenterEnt()
+{
+	if (entList->currentIndex().row() == -1)
+	{
+		status->setText("Error: no entity selected.");
+		return;
+	}
+	
+	if (!ml->exists(entList->currentIndex().data().toString().toStdString()))
+	{
+		status->setText("Error: entity does not exist.");
+		return;
+	}
+
+	t3_ent *ent = ml->getEntity(entList->currentIndex().data().toString().toStdString());
+	recenterEntDialog dia(this, t3_ent::findMaxMin(ent->allPoly()));
+
+	if (dia.exec())
+	{
+		status->setText("Entity successfully re-centered.");
+		ent->recenter(dia.getX(), dia.getY(), dia.getZ());
+	}
+	else
+	{
+		status->setText("");
+	}
 }
 
 void t3MLEditor::addToComp()
@@ -287,7 +318,12 @@ void t3MLEditor::addToComp()
 		mm_new = t3_ent::findMaxMin(ml->getEntity(newname)->allPoly());
 		mm_comp = t3_ent::findMaxMin(ml->getEntity(oldname)->allPoly());
 
-		if (dia.isTop())
+
+		if (ent->subEntSize() == 0)
+		{
+			ent->addSubEnt(0, 0, 0, 0, 0, newname);
+		}
+		else if (dia.isTop())
 		{
 			ent->addSubEnt(0, mm_comp.max_y - mm_new.min_y + dia.getGap(), 0, 0, 0, newname);
 		}
@@ -364,6 +400,8 @@ t3MLEditor::t3MLEditor(t3_masterList *mlin, QWidget *parent) : QWidget(parent)
 	delButton->setMaximumWidth(80);
 	addCompButton = new QPushButton("Add To...");
 	addCompButton->setMaximumWidth(90);
+	recenterButton = new QPushButton("Re-Center");
+	recenterButton->setMaximumWidth(100);
 
 	hslide = new QSlider(Qt::Horizontal);
 	hslide->setMinimum(-179);
@@ -422,6 +460,7 @@ t3MLEditor::t3MLEditor(t3_masterList *mlin, QWidget *parent) : QWidget(parent)
 	hbuttonbox->addWidget(edCmpButton);
 	hbuttonbox->addWidget(delButton);
 	hbuttonbox->addWidget(addCompButton);
+	hbuttonbox->addWidget(recenterButton);
 
 	cols->setMenuBar(menuBar);
 	cols->addWidget(entList,0,0,2,1);
@@ -438,6 +477,7 @@ t3MLEditor::t3MLEditor(t3_masterList *mlin, QWidget *parent) : QWidget(parent)
 	connect(edCmpButton, SIGNAL(clicked()), this, SLOT(editComp()));
 	connect(delButton, SIGNAL(clicked()), this, SLOT(deleteEnt()));
 	connect(addCompButton, SIGNAL(clicked()), this, SLOT(addToComp()));
+	connect(recenterButton, SIGNAL(clicked()), this, SLOT(recenterEnt()));
 
 	buildEntList();
 }

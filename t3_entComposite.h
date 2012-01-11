@@ -49,6 +49,8 @@ class t3_entComposite : public t3_ent
 	virtual void removeSubEnt(int i);
 	virtual bool isContainer() { return true; }
 
+	virtual void recenter(double dx, double dy, double dz);
+
 	t3_entComposite(const std::string& inname, t3_masterList* mlin) 
 	{
 		name = inname; 
