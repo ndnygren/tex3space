@@ -42,6 +42,19 @@ void t3_matrix::makeYaw(double angle)
 	data[2][2] = cos(angle*3.1415927/180.0);
 }
 
+void t3_matrix::makePitch(double angle)
+{
+	data[0][0] = 1;
+	data[0][1] = 0;
+	data[0][2] = 0;
+	data[1][0] = 0;
+	data[1][1] = cos(angle*3.1415927/180.0);
+	data[1][2] = -sin(angle*3.1415927/180.0);
+	data[2][0] = 0;
+	data[2][1] = sin(angle*3.1415927/180.0);
+	data[2][2] = cos(angle*3.1415927/180.0);
+}
+
 t3_point t3_matrix::operator*(const t3_point& rhs) const
 {
 	t3_point output;

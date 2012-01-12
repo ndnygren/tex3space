@@ -20,6 +20,7 @@
 #include "editComposite.h"
 #include "smartAddEntityDialog.h"
 #include "recenterEntDialog.h"
+#include "rotateEntDialog.h"
 #include <fstream>
 
 using namespace std;
@@ -121,6 +122,8 @@ void t3MLEditor::newPrimative()
 	double h,w,d;
 	primativeDialog dia(this);
 
+	status->setText("");
+
 	if (dia.exec())
 	{
 		prim = new t3_entPrimative(dia.getName());
@@ -186,6 +189,7 @@ void t3MLEditor::newComposite()
 	t3_entComposite *ent;
 	compositeDialog dia(this);
 
+	status->setText("");
 
 	if (dia.exec())
 	{
@@ -200,6 +204,7 @@ void t3MLEditor::editComp()
 	int i;
 	t3_entComposite *ent;
 
+	status->setText("");
 	if (entList->currentIndex().row() == -1)
 	{
 		status->setText("Error: no entity selected.");
@@ -248,9 +253,7 @@ void t3MLEditor::deleteEnt()
 	}
 
 	
-	if (ml->deleteEntity(
-entList->currentIndex().data().toString().toStdString()
-))
+	if (ml->deleteEntity(entList->currentIndex().data().toString().toStdString()))
 		{ status->setText("Entity removed."); }
 	else
 		{ status->setText("Error: could not remove entity"); }
@@ -283,6 +286,33 @@ void t3MLEditor::recenterEnt()
 	else
 	{
 		status->setText("");
+	}
+}
+
+void t3MLEditor::rotateEnt()
+{
+	status->setText("");
+	if (entList->currentIndex().row() == -1)
+	{
+		status->setText("Error: no entity selected.");
+		return;
+	}
+	
+	if (!ml->exists(entList->currentIndex().data().toString().toStdString()))
+	{
+		status->setText("Error: entity does not exist.");
+		return;
+	}
+
+	t3_ent *ent = ml->getEntity(entList->currentIndex().data().toString().toStdString());
+	rotateEntDialog dia(this, ent->isContainer());
+
+	if (dia.exec())
+	{
+		status->setText("Entity rotated.");
+		if (dia.isYaw()) { ent->rotate(dia.getAngle(), t3_ent::TYPE_YAW); }
+		else if (dia.isRoll()) { ent->rotate(dia.getAngle(), t3_ent::TYPE_ROLL); }
+		else if (dia.isPitch()) { ent->rotate(dia.getAngle(), t3_ent::TYPE_PITCH); }
 	}
 }
 
@@ -391,17 +421,19 @@ t3MLEditor::t3MLEditor(t3_masterList *mlin, QWidget *parent) : QWidget(parent)
 	ml = mlin;
 
 	nPrButton = new QPushButton("New Primative");
-	nPrButton->setMaximumWidth(120);
+	nPrButton->setMaximumWidth(110);
 	nCmButton = new QPushButton("New Composite");
-	nCmButton->setMaximumWidth(120);
+	nCmButton->setMaximumWidth(110);
 	edCmpButton = new QPushButton("Edit Composite");
-	edCmpButton->setMaximumWidth(120);
+	edCmpButton->setMaximumWidth(110);
 	delButton = new QPushButton("Delete");
 	delButton->setMaximumWidth(80);
 	addCompButton = new QPushButton("Add To...");
-	addCompButton->setMaximumWidth(90);
+	addCompButton->setMaximumWidth(80);
 	recenterButton = new QPushButton("Re-Center");
-	recenterButton->setMaximumWidth(100);
+	recenterButton->setMaximumWidth(90);
+	rotateButton = new QPushButton("Rotate");
+	rotateButton->setMaximumWidth(80);
 
 	hslide = new QSlider(Qt::Horizontal);
 	hslide->setMinimum(-179);
@@ -461,6 +493,7 @@ t3MLEditor::t3MLEditor(t3_masterList *mlin, QWidget *parent) : QWidget(parent)
 	hbuttonbox->addWidget(delButton);
 	hbuttonbox->addWidget(addCompButton);
 	hbuttonbox->addWidget(recenterButton);
+	hbuttonbox->addWidget(rotateButton);
 
 	cols->setMenuBar(menuBar);
 	cols->addWidget(entList,0,0,2,1);
@@ -478,6 +511,7 @@ t3MLEditor::t3MLEditor(t3_masterList *mlin, QWidget *parent) : QWidget(parent)
 	connect(delButton, SIGNAL(clicked()), this, SLOT(deleteEnt()));
 	connect(addCompButton, SIGNAL(clicked()), this, SLOT(addToComp()));
 	connect(recenterButton, SIGNAL(clicked()), this, SLOT(recenterEnt()));
+	connect(rotateButton, SIGNAL(clicked()), this, SLOT(rotateEnt()));
 
 	buildEntList();
 }

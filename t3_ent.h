@@ -73,6 +73,21 @@ class t3_ent
 	static const int TYPE_SIDE = 2;
 
 	/**
+	 * @brief Integer type code, requesting yaw rotation.
+	 */
+	static const int TYPE_YAW = 3;
+
+	/**
+	 * @brief Integer type code, requesting a roll rotation.
+	 */
+	static const int TYPE_ROLL = 4;
+
+	/**
+	 * @brief Integer type code, requesting a pitch rotation.
+	 */
+	static const int TYPE_PITCH = 5;
+
+	/**
 	 * @brief A pair of doubles.
 	 * @details In this pair, the low pair is set as the least of the input pair, while the other is set in high.
 	 *
@@ -268,6 +283,13 @@ class t3_ent
 	 * @param dz the offset along the z axis
 	 */
 	virtual void recenter(double dx, double dy, double dz) = 0;
+
+	/**
+	 * @brief rotates the entity
+	 * @param angle the angle (in degrees) of rotation
+	 * @param type the axis type code of the rotation (TYPE_YAW, TYPE_ROLL, TYPE_PITCH)
+	 */
+	virtual void rotate(double angle, int type) = 0;
 
 	virtual ~t3_ent() {}
 };

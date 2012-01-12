@@ -41,6 +41,12 @@ class t3_matrix
 	 * @param angle The angle in the degrees to rotate
 	 */
 	void makeRoll(double angle);
+
+	/**
+	 * @brief Populates the matrix with the neccesary values to rotate the matrix around the x axis by "angle" degrees
+	 * @param angle The angle in the degrees to rotate
+	 */
+	void makePitch(double angle);
 	
 	t3_point operator*(const t3_point& rhs) const;
 	t3_matrix operator*(const t3_matrix& rhs) const;

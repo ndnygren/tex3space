@@ -119,6 +119,27 @@ void t3_entComposite::recenter(double dx, double dy, double dz)
 	}
 }
 
+void t3_entComposite::rotate(double angle, int type)
+{
+	int j;
+	t3_point tp;
+	t3_matrix mat;
+
+	if (type == TYPE_YAW) { mat.makeYaw(angle); } 
+	else if (type == TYPE_ROLL) { mat.makeRoll(angle); } 
+
+	for (j = 0; j < (int)subent.size(); j++)
+	{
+		tp = t3_point(subent[j].x, subent[j].y, subent[j].z);
+		tp = mat*tp;
+		subent[j].x = tp.x;
+		subent[j].y = tp.y;
+		subent[j].z = tp.z;
+		if (type == TYPE_YAW) { subent[j].yaw += angle; }
+		else if (type == TYPE_ROLL) { subent[j].roll += angle; }
+	}
+}
+
 ostream& operator<<(ostream& os, const t3_sixtuple& rhs)
 {
 	os << "(" << rhs.x << "," << rhs.y << "," << rhs.z << "," << rhs.yaw << "," << rhs.roll << "," << rhs.name << ")";

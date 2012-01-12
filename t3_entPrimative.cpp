@@ -13,7 +13,9 @@
 *
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <http://www.gnu.org/licenses/>. */
+
 #include "t3_entPrimative.h"
+#include "t3_matrix.h"
 #include <sstream>
 
 using namespace std;
@@ -84,6 +86,22 @@ void t3_entPrimative::recenter(double dx, double dy, double dz)
 			list[i][j].z -= dz;
 		}
 	}
+}
+
+void t3_entPrimative::rotate(double angle, int type)
+{
+	int i,j;
+	t3_matrix mat;
+
+	if (type == TYPE_YAW) { mat.makeYaw(angle); }
+	else if (type == TYPE_ROLL) { mat.makeRoll(angle); }
+	else if (type == TYPE_PITCH) { mat.makePitch(angle); }
+
+	for (i = 0; i < size(); i++)
+		for (j = 0; j < list[i].size(); j++)
+		{
+			list[i][j] = mat*list[i][j];
+		}
 }
 
 t3_entPrimative::t3_entPrimative(const string& inname)

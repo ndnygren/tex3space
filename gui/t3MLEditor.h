@@ -42,7 +42,7 @@ class t3MLEditor : public QWidget
 	QAction *exitAct;
 	QMenu *exportMenu;
 	QAction *toSVGAct;
-	QPushButton *nPrButton, *nCmButton, *edCmpButton, * delButton, *addCompButton, *recenterButton;
+	QPushButton *nPrButton, *nCmButton, *edCmpButton, * delButton, *addCompButton, *recenterButton, *rotateButton;
 	QSlider *hslide;
 
 	protected:
@@ -59,6 +59,7 @@ class t3MLEditor : public QWidget
 	void editComp();
 	void deleteEnt();
 	void recenterEnt();
+	void rotateEnt();
 	void addToComp();
 	void exportSVG();
 

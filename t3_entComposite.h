@@ -50,6 +50,7 @@ class t3_entComposite : public t3_ent
 	virtual bool isContainer() { return true; }
 
 	virtual void recenter(double dx, double dy, double dz);
+	virtual void rotate(double angle, int type);
 
 	t3_entComposite(const std::string& inname, t3_masterList* mlin) 
 	{

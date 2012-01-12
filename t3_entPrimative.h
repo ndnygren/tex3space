@@ -41,6 +41,7 @@ class t3_entPrimative: public t3_ent
 	virtual std::string str() const;
 	virtual void addSubEnt(double x, double y, double z, double yaw, double roll, const std::string& name);
 	virtual void recenter(double dx, double dy, double dz);
+	virtual void rotate(double angle, int type);
 	t3_entPrimative(const std::string& inname);
 
 	virtual ~t3_entPrimative() {}
