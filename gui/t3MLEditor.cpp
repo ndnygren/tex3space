@@ -25,7 +25,7 @@
 
 using namespace std;
 
-string t3MLEditor::titlebar = "tex3space v0._ ";
+string t3MLEditor::titlebar = "tex3space v0.2 ";
 
 void t3MLEditor::buildEntList()
 {
